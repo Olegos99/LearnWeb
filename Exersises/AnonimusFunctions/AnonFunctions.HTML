@@ -3,13 +3,35 @@
         <script>
             array = [1,2,3,4,5,6,7,8,9];
 
+            //Anonimus functions:
+            //v1
+            let v1 = () => {
+                console.log("hi");
+            }
+            //v2
+            let v2 = function(array)
+            {
+                console.log(array.length);
+            }
+            //v3
+            let v3 = (array) => console.log(array.length + " - is the array length");
+
+
+            v1();
+            v2(array);
+            v3(array);
+
+            console.log("________________________");
+
+            array = [1,2,3,4,5,6,7,8,9];
+
             //foreach   do something for each element of array
             array.forEach(element => {
                 console.log(element * 2);
             });
 
             console.log(array);
-            console.log("________________________");
+            console.log("________function inside foreach_______");
 
             function f1(something)
             {
@@ -18,18 +40,19 @@
 
             array.forEach(element => {f1(element)});
 
-            var arr2 = [1,2,3,4,5,6,7,8,9,9,8,7,6,5,4,3,2,1];
+            var arr2 = [1,2,3,4,5,6,7,8,9,10,8,7,6,5,4,3,2,1];
 
+            console.log("_________filter__________");
             //filter returns elements one by one if passed condition
             let newarr = arr2.filter(element => element > 5);
 
             console.log(newarr);
-            console.log("________________________");
+            console.log("_______map1__________");
 
             //map returns all elements one by one with some changes
             let newArr2 = arr2.map(element => element *3);
             console.log(newArr2);
-            console.log("________________________");
+            console.log("________map2___________");
 
             let newArr3 = arr2.map((element, index, originalArray)=>
                 {
@@ -38,8 +61,25 @@
                     console.log(originalArray);
                 }
             );
+            //reduce
+            console.log("________reduce__________");
 
+                let sum1 = arr2.reduce((x,y) => x+y)
+                console.log(sum1);
 
+            console.log("________________________");
+
+                //sort
+                var SomeArr = [45,123,4321,5,-456,23,18,0,34,789];
+                SomeArr.sort((a,b) =>
+                    {
+                        if(a > b)
+                            return -1;
+                        else
+                        return 1;
+                    }
+                );
+                console.log(SomeArr);
         </script>
     </body>
 </html>

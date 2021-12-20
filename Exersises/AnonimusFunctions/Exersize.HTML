@@ -1,0 +1,48 @@
+<html>
+    <body>
+        <script>
+            //1 
+            let f1 = (a,b) => { return a.length>b.length ? a:b;}
+            console.log(f1("Reallly lllong sttrriing", "Short string"));
+            //2
+            console.log("-------------------------------");
+            let f2 = (arr) => {return arr.reduce((x,y) => x+y)};
+            console.log(f2([1,2,3,4,6]));
+            //3
+            console.log("-------------------------------");
+            let f3 = (arr) => {return arr.filter(x => x>4 && x<8)};
+            console.log(f3([1,2,3,4,6,7,8,9,0]));
+            //4
+            console.log("-------------------------------");
+            let f4 = (arr) => {return arr.forEach((element, index) => { console.log(`Length of ${index + 1} sting is ${element.length}`);});};
+            console.log(f4(["Hey","How are you?", "", "1234567",""]));//somehow it is one more iteration
+            //5
+            console.log("-------------------------------");
+            var WorkingArray = [ { name : "Avi", grades : [90,76,99,20]},
+            { name : "Dana", grades : [72,54,5]},
+            { name : "Ron", grades : [92,66,67,79,30]} ];
+            let f5 = (arr) => { return arr.forEach(elem => console.log(`This is ${elem.name}, first grade is ${elem.grades[0]}`))};
+            console.log(f5(WorkingArray));
+            //6
+            console.log("-------------------------------");
+            let f6 = (arr) => { return arr.filter(elem => elem.name.length < 4)};
+            console.log(f6(WorkingArray));
+            //7
+            console.log("-------------------------------");
+            var WorkingArray2 = ['Ronen','Avi','Ronit','Ehud','Itamar'];
+            let f7 = (arr) => { return arr.filter(el => el.length > 4)};
+            console.log(f7(WorkingArray2));
+            console.log(f2(f7(WorkingArray2)));
+            //8
+            console.log("-------------------------------");
+            let minGradeTemp = 100;
+            let MinGradeStudent;
+            let f8 = (arr) => {
+            arr.forEach(student => student.grades.forEach(gr => gr < minGradeTemp ? (minGradeTemp = gr) & (MinGradeStudent = student): minGradeTemp = minGradeTemp ));//searching minimum grade from all grades
+            return (MinGradeStudent);
+            };
+            var MinStudentRequest = f8(WorkingArray);
+            console.log(`${MinStudentRequest.name} - student with minimum grade: ${minGradeTemp}`);
+        </script>
+    </body>
+</html>
