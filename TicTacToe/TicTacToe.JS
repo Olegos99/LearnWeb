@@ -1,0 +1,513 @@
+let currentlyPlaying = false;
+let FirstPlayerTurn = true;
+let gameSize = document.getElementById("gameSize");
+let place = document.getElementById("GameTable");
+let CurrentPlayerText = document.getElementById("CurrentPlayerText");
+let goalText = document.getElementById("GoalText");
+let ChangeGoalButton = document.getElementById("GoalButton");
+let PreviousTurnButton = document.getElementById("OneStepBack");
+let gameSizeText = document.getElementById("gameSizetext");
+let gameIsSet = false;
+var UsedElementsMap = new Map();
+let turnsCounter = 0;
+let GamingTRs = [];
+let GameIsFinished = false;
+let MaxTurns = 0;
+let inARowToWin = 0;
+
+ResetGameSize();
+
+function ResetGameSize()
+{
+    //console.log("game size is: " + gameSize.value);
+    if(gameIsSet)
+    {
+        for(var q = 0; q < GamingTRs.length; q++ )
+        {
+            GamingTRs[q].remove();
+        }
+    }
+    UsedElementsMap = new Map();
+    turnsCounter = 0;
+    FirstPlayerTurn = true;
+    GameIsFinished = false;
+    CurrentPlayerText.innerText = "";
+    goalText.innerText = `The goal is to set ${gameSize.value} in a row` ;
+    gameSizeText.innerText = `Current sise is: ${gameSize.value}`;
+    inARowToWin = gameSize.value;
+    ChangeGoalButton.disabled = false;
+    PreviousTurnButton.disabled = false;
+    createBoard();
+}
+
+function createBoard()
+{
+    for(var i = 0; i < gameSize.value; i++)
+    {   
+        GamingTRs.push(newElement = document.createElement("tr"));
+        newElement.className = "GameTR";
+        newElement.id = i;
+        place.append(newElement); 
+        for(var z = 0; z < gameSize.value; z++)
+        {
+            var newElementChild = document.createElement("td");
+            newElementChild.id = `${i}${z}`;
+            newElement.append(newElementChild);
+            newElementChild.setAttribute("onclick","PlayersTurn(this.id);");
+        }
+    }
+    gameIsSet = true;
+    MaxTurns = gameSize.value*gameSize.value;
+}
+
+function OneStepBack()
+{
+    if(!GameIsFinished && turnsCounter > 0)
+    {
+        let keys = Array.from( UsedElementsMap.keys() );
+        let lastElement = keys[keys.length - 1];
+        //console.log("the last key is: " + lastElement);
+
+        var Elem = document.getElementById(lastElement);
+        //var lastTurnElement = Array.from(UsedElementsMap.values()).pop(); 
+        UsedElementsMap.delete(lastElement);
+        Elem.className = "";
+
+        var child = Elem.lastElementChild; 
+        while (child) {
+        Elem.removeChild(child);
+    child = Elem.lastElementChild;
+    }
+    turnsCounter--;
+    if(turnsCounter < 1)
+    {
+        ChangeGoalButton.disabled = false;
+    }
+    FirstPlayerTurn = !FirstPlayerTurn;
+    CurrentPlayerText.innerText = `${FirstPlayerTurn? "First" : "Second"} player turn. (${FirstPlayerTurn? "X" : "O"})`;
+    }
+}
+
+function SetNewGoal()
+{
+    var newGoal = parseInt(document.getElementById("goalInput").value);
+    //console.log("new goal is: " + newGoal);
+    if((parseInt(newGoal) < 3) || (parseInt(newGoal) > gameSize.value))
+    {
+        if(newGoal < 3)
+        {
+            alert("The minimum goal is 3");
+        }
+        if(newGoal > gameSize.value)
+        {
+            alert("Cant set goal bigger than size of the board");
+        }
+    }
+    else{
+        inARowToWin = newGoal;
+        goalText.innerText = `The goal is to set ${inARowToWin} in a row` ;
+    }
+}
+
+function PlayersTurn(ElementID)
+{
+    //console.log(ElementID);
+    var ClicedElement = document.getElementById(`${ElementID}`);
+
+    if(!UsedElementsMap.has(ClicedElement.id) && !GameIsFinished)
+    {
+        var MySVG = document.createElement("img");
+        MySVG.src = FirstPlayerTurn? "/Icons/iconmonstr-x-mark-1.SVG" : "/Icons/iconmonstr-shape-20.SVG";
+
+        ClicedElement.append(MySVG);
+
+        ClicedElement.className = FirstPlayerTurn? "First" : "Second";
+        UsedElementsMap.set(ClicedElement.id,FirstPlayerTurn? "First" : "Second");
+        console.log(UsedElementsMap);
+        turnsCounter++;
+        if(turnsCounter >= 5)
+        {
+            CheckWiningCondition(ClicedElement.id, FirstPlayerTurn);
+        }
+        FirstPlayerTurn = !FirstPlayerTurn;
+        if(!GameIsFinished) CurrentPlayerText.innerText = `${FirstPlayerTurn? "First" : "Second"} player turn. (${FirstPlayerTurn? "X" : "O"})`;
+        if(turnsCounter == MaxTurns)
+        {
+            Teko();
+        }
+
+    }
+    if(turnsCounter >= 1)
+    {
+        ChangeGoalButton.disabled = true;
+    }
+}
+
+function CheckWiningCondition(ClicedElement, FirstPlayerTurn)
+{
+    var HorizontalPos = parseInt(ClicedElement[1]);
+    var VerticallPos = parseInt(ClicedElement[0]);
+    // console.log("HorizontalPos " +  HorizontalPos);
+    // console.log("VerticallPos " +  VerticallPos);
+    var counter = 0;
+    var CheckingPlayer = FirstPlayerTurn? "First" : "Second";
+    //all axes check
+    var Line = [];
+    Line.push(ClicedElement);
+    for(var i = 0; i < 4; i++)
+    {
+        Line = [];
+        Line.push(ClicedElement);
+        if(i==0)
+        {
+                //         var isSameElementInRight = UsedElementsMap.get(`${parseInt(HorizontalPos)}${parseInt(VerticallPos + z)}`) === CheckingPlayer;
+        //         var isSameElementInLeft = UsedElementsMap.get(`${parseInt(HorizontalPos)}${parseInt(VerticallPos - z)}`) === CheckingPlayer;
+
+            var innerCounter1 = 0;
+            for(var q = 1; q <= inARowToWin; q++)
+            {
+                if(UsedElementsMap.get(`${parseInt(VerticallPos + q)}${parseInt(HorizontalPos)}`) === CheckingPlayer)
+                {
+                    innerCounter1++;
+                    Line.push(`${parseInt(VerticallPos + q)}${parseInt(HorizontalPos)}`);
+                }
+                else
+                    break;
+            }
+            
+
+            var innerCounter2 = 0;
+            for(var q = 1; q <= inARowToWin; q++)
+            {
+                if(UsedElementsMap.get(`${parseInt(VerticallPos - q)}${parseInt(HorizontalPos)}`) === CheckingPlayer)
+                {
+                    innerCounter2++;
+                    Line.push(`${parseInt(VerticallPos - q)}${parseInt(HorizontalPos)}`);
+                }
+                else
+                    break; 
+            }
+            //console.log("i0(vertical): " + "innerCounter1:" + innerCounter1 + " innerCounter2: " + innerCounter2);
+
+            if(innerCounter1 + innerCounter2 >= inARowToWin -1 )
+            {
+                Win(FirstPlayerTurn, Line);
+                break;  
+            }
+        }
+        if(i==1)
+        {
+           // var isSameElementInUp = UsedElementsMap.get(`${parseInt(HorizontalPos + z)}${parseInt(VerticallPos)}`) === CheckingPlayer;
+        //         var isSameElementInDown = UsedElementsMap.get(`${parseInt(HorizontalPos - z)}${parseInt(VerticallPos)}`) === CheckingPlayer;
+            var innerCounter1 = 0;
+            for(var q = 1; q <= inARowToWin; q++)
+            {
+                if(UsedElementsMap.get(`${parseInt(VerticallPos)}${parseInt(HorizontalPos + q)}`) === CheckingPlayer)
+                {
+                    innerCounter1++;
+                    Line.push(`${parseInt(VerticallPos)}${parseInt(HorizontalPos + q)}`);
+                }
+                else
+                    break;
+            }
+            
+
+            var innerCounter2 = 0;
+            for(var q = 1; q <= inARowToWin; q++)
+            {
+                if( UsedElementsMap.get(`${parseInt(VerticallPos)}${parseInt(HorizontalPos - q)}`) === CheckingPlayer)
+                {
+                    innerCounter2++;
+                    Line.push(`${parseInt(VerticallPos)}${parseInt(HorizontalPos - q)}`);
+                }
+                else
+                    break; 
+            }
+            //console.log("i1(horizontal): " + "innerCounter1:" + innerCounter1 + " innerCounter2: " + innerCounter2);
+
+            if(innerCounter1 + innerCounter2 >= inARowToWin -1 )
+            {
+                Win(FirstPlayerTurn, Line);
+                break;  
+            }
+        }
+        if(i==2)
+        {
+           // var isSameElementInUpRight = UsedElementsMap.get(`${parseInt(HorizontalPos + z)}${parseInt(VerticallPos + z)}`) === CheckingPlayer;
+        //         var isSameElementInDownLeft = UsedElementsMap.get(`${parseInt(HorizontalPos - z)}${parseInt(VerticallPos - z)}`) === CheckingPlayer;
+        var innerCounter1 = 0;
+            for(var q = 1; q <= inARowToWin; q++)
+            {
+                if(UsedElementsMap.get(`${parseInt(VerticallPos + q)}${parseInt(HorizontalPos + q)}`) === CheckingPlayer)
+                {
+                    innerCounter1++;
+                    Line.push(`${parseInt(VerticallPos + q)}${parseInt(HorizontalPos + q)}`);
+                }
+                else
+                    break;
+            }
+            
+
+            var innerCounter2 = 0;
+            for(var q = 1; q <= inARowToWin; q++)
+            {
+                if(UsedElementsMap.get(`${parseInt(VerticallPos - q)}${parseInt(HorizontalPos - q)}`) === CheckingPlayer)
+                {
+                    innerCounter2++;
+                    Line.push(`${parseInt(VerticallPos - q)}${parseInt(HorizontalPos - q)}`);
+                }
+                else
+                    break; 
+            }
+            //console.log("i2(down right to up left): " + "innerCounter1:" + innerCounter1 + " innerCounter2: " + innerCounter2);
+
+            if(innerCounter1 + innerCounter2 >= inARowToWin -1 )
+            {
+                Win(FirstPlayerTurn, Line);
+                break;  
+            }
+        }
+        if(i == 3)
+        {
+            // var isSameElementInUpLeft = UsedElementsMap.get(`${parseInt(HorizontalPos + z)}${parseInt(VerticallPos - z)}`) === CheckingPlayer;
+            // var isSameElementInDownRight = UsedElementsMap.get(`${parseInt(HorizontalPos - z)}${parseInt(VerticallPos + z)}`) === CheckingPlayer;
+                var innerCounter1 = 0;
+            for(var q = 1; q <= inARowToWin; q++)
+            {
+                if(UsedElementsMap.get(`${parseInt(VerticallPos - q)}${parseInt(HorizontalPos + q)}`) === CheckingPlayer)
+                {
+                    innerCounter1++;
+                    Line.push(`${parseInt(VerticallPos - q)}${parseInt(HorizontalPos + q)}`);
+                }
+                else
+                    break;
+            }
+            
+
+            var innerCounter2 = 0;
+            for(var q = 1; q <= inARowToWin; q++)
+            {
+                if(UsedElementsMap.get(`${parseInt(VerticallPos + q)}${parseInt(HorizontalPos - q)}`) === CheckingPlayer)
+                {
+                    innerCounter2++;
+                    Line.push(`${parseInt(VerticallPos + q)}${parseInt(HorizontalPos - q)}`);
+                }
+                else
+                    break; 
+            }
+            //console.log("i3(gown left to up right): " + "innerCounter1:" + innerCounter1 + " innerCounter2: " + innerCounter2);
+
+            if(innerCounter1 + innerCounter2 >= inARowToWin -1 )
+            {
+                Win(FirstPlayerTurn, Line);
+                break;  
+            }
+        }
+        // for(var z = 1; z < inARowToWin; z++) 
+        // {
+        //     if(i == 0)
+        //     {
+        //         var isSameElementInRight = UsedElementsMap.get(`${parseInt(HorizontalPos)}${parseInt(VerticallPos + z)}`) === CheckingPlayer;
+        //         var isSameElementInLeft = UsedElementsMap.get(`${parseInt(HorizontalPos)}${parseInt(VerticallPos - z)}`) === CheckingPlayer;
+        //         if(isSameElementInRight || isSameElementInLeft)
+        //         {
+        //                 var innerCounter = 0;
+        //                 for(var q = 1; q <= z; q++)
+        //                 {
+        //                     if(UsedElementsMap.get(`${parseInt(HorizontalPos)}${parseInt(VerticallPos + q)}`) === CheckingPlayer)
+        //                         innerCounter++;
+        //                     else
+        //                         break;
+        //                 }
+        //                     counter+=innerCounter;
+
+        //                 innerCounter = 0;
+        //                 for(var q = 1; q <= z; q++)
+        //                 {
+        //                     if(UsedElementsMap.get(`${parseInt(HorizontalPos)}${parseInt(VerticallPos - q)}`) === CheckingPlayer)
+        //                         innerCounter++;
+        //                     else
+        //                         break; 
+        //                 }
+        //                     counter+=innerCounter;
+        //         }
+        //     }
+
+        //     if(i == 1)
+        //     {
+        //         var isSameElementInUp = UsedElementsMap.get(`${parseInt(HorizontalPos + z)}${parseInt(VerticallPos)}`) === CheckingPlayer;
+        //         var isSameElementInDown = UsedElementsMap.get(`${parseInt(HorizontalPos - z)}${parseInt(VerticallPos)}`) === CheckingPlayer;
+        //         if(isSameElementInUp || isSameElementInDown)
+        //         {
+        //             // counter++;
+        //             // if(isSameElementInUp && isSameElementInDown)
+        //             // {
+        //             //     counter++;
+        //             // }
+        //             var innerCounter = 0;
+        //                 for(var q = 1; q <= z; q++)
+        //                 {
+        //                     if(UsedElementsMap.get(`${parseInt(HorizontalPos + q)}${parseInt(VerticallPos)}`) === CheckingPlayer)
+        //                         innerCounter++;
+        //                     else
+        //                         break;
+        //                 }
+
+        //                 counter+=innerCounter;
+
+        //                 innerCounter = 0;
+        //                 for(var q = 1; q <= z; q++)
+        //                 {
+        //                     if(UsedElementsMap.get(`${parseInt(HorizontalPos - q)}${parseInt(VerticallPos)}`) === CheckingPlayer)
+        //                         innerCounter++;
+        //                     else
+        //                         break; 
+        //                 }
+        //                 counter+=innerCounter;
+        //         }
+        //     }
+
+        //     if(i == 2)
+        //     {
+        //         var isSameElementInUpRight = UsedElementsMap.get(`${parseInt(HorizontalPos + z)}${parseInt(VerticallPos + z)}`) === CheckingPlayer;
+        //         var isSameElementInDownLeft = UsedElementsMap.get(`${parseInt(HorizontalPos - z)}${parseInt(VerticallPos - z)}`) === CheckingPlayer;
+        //         if(isSameElementInUpRight || isSameElementInDownLeft)
+        //         {
+        //             // counter++;
+        //             // if(isSameElementInUpRight && isSameElementInDownLeft)
+        //             // {
+        //             //     counter++;
+        //             // }
+        //             var innerCounter = 0;
+        //                 for(var q = 1; q <= z; q++)
+        //                 {
+        //                     if(UsedElementsMap.get(`${parseInt(HorizontalPos + q)}${parseInt(VerticallPos + q)}`) === CheckingPlayer)
+        //                         innerCounter++;
+        //                     else
+        //                         break;
+        //                 }
+        //                 counter+=innerCounter;
+
+        //                 innerCounter = 0;
+        //                 for(var q = 1; q <= z; q++)
+        //                 {
+        //                     if(UsedElementsMap.get(`${parseInt(HorizontalPos - q)}${parseInt(VerticallPos - q)}`) === CheckingPlayer)
+        //                         innerCounter++;
+        //                     else
+        //                         break; 
+        //                 }
+        //                 counter+=innerCounter;
+        //         }
+        //     }
+
+        //     // if(i == 3)
+        //     // {
+        //     //     var isSameElementInUpLeft = UsedElementsMap.get(`${parseInt(HorizontalPos + z)}${parseInt(VerticallPos - z)}`) === CheckingPlayer;
+        //     //     var isSameElementInDownRight = UsedElementsMap.get(`${parseInt(HorizontalPos - z)}${parseInt(VerticallPos + z)}`) === CheckingPlayer;
+        //     //     if(isSameElementInUpLeft || isSameElementInDownRight)
+        //     //     {
+        //     //         // counter++;
+        //     //         // if(isSameElementInUpLeft && isSameElementInDownRight)
+        //     //         // {
+        //     //         //     counter++;
+        //     //         // }
+        //     //         var innerCounter1 = 0;
+        //     //             for(var q = 1; q <= z; q++)
+        //     //             {
+        //     //                 if(UsedElementsMap.get(`${parseInt(HorizontalPos + q)}${parseInt(VerticallPos - q)}`) === CheckingPlayer)
+        //     //                 innerCounter1++;
+        //     //                 else
+        //     //                     break;
+        //     //             }
+                        
+
+        //     //             var innerCounter2 = 0;
+        //     //             for(var q = 1; q <= z; q++)
+        //     //             {
+        //     //                 if(UsedElementsMap.get(`${parseInt(HorizontalPos - q)}${parseInt(VerticallPos + q)}`) === CheckingPlayer)
+        //     //                 innerCounter2++;
+        //     //                 else
+        //     //                     break; 
+        //     //             }
+
+        //     //             // if(innerCounter1 + innerCounter2)
+        //     //             // {
+
+        //     //             // }
+
+        //     //     }
+        //     // }
+
+        //     //if(i == 0) var pos = `${parseInt(HorizontalPos + z)}${parseInt(VerticallPos)}`;//up
+
+        //     //if(i == 1) var pos =`${parseInt(HorizontalPos)}${parseInt(VerticallPos + z)}`;//right
+
+        //     //if(i == 2)  var pos =`${parseInt(HorizontalPos - z)}${parseInt(VerticallPos)}`;//down
+
+        //     //if(i == 3) var pos =`${parseInt(HorizontalPos)}${parseInt(VerticallPos - z)}`;//left
+
+        //     // if(i == 4)  var pos = `${parseInt(HorizontalPos + z)}${parseInt(VerticallPos + z)}`;//upp right
+
+        //     // if(i == 5) var pos =`${parseInt(HorizontalPos + z)}${parseInt(VerticallPos - z)}`;//down right
+
+        //     // if(i == 6) var pos =`${parseInt(HorizontalPos - z)}${parseInt(VerticallPos - z)}`;//down left
+
+        //     // if(i == 7) var pos =`${parseInt(HorizontalPos - z)}${parseInt(VerticallPos + z)}`;//upp left
+
+        //     //UsedElementsMap.get(pos) === CheckingPlayer ? counter++ : counter = counter;
+
+        //     if(counter == parseInt(inARowToWin) - 1)
+        //     {
+        //         Win(FirstPlayerTurn);
+        //         break;
+        //     }
+        // }
+        // counter = 0;
+    }
+    //all directions check for "last in the line"
+
+    // // middle in horizontal line
+    // if(UsedElementsMap.get(`${parseInt(HorizontalPos + 1)}${parseInt(VerticallPos)}`) === CheckingPlayer &&
+    // UsedElementsMap.get(`${parseInt(HorizontalPos - 1)}${parseInt(VerticallPos)}`) === CheckingPlayer) 
+    // {
+    //     Win(FirstPlayerTurn);
+    // }
+    // middle in vertical line
+    // if(UsedElementsMap.get(`${parseInt(HorizontalPos)}${parseInt(VerticallPos + 1)}`) === CheckingPlayer &&
+    // UsedElementsMap.get(`${parseInt(HorizontalPos)}${parseInt(VerticallPos -1)}`) === CheckingPlayer) 
+    // {
+    //     Win(FirstPlayerTurn);
+    // }
+    //left top to right down
+    // if(UsedElementsMap.get(`${parseInt(HorizontalPos - 1)}${parseInt(VerticallPos + 1)}`) === CheckingPlayer &&
+    // UsedElementsMap.get(`${parseInt(HorizontalPos + 1)}${parseInt(VerticallPos -1)}`) === CheckingPlayer)
+    // {
+    //     Win(FirstPlayerTurn);
+    // }
+    // //right top to left down
+    // if(UsedElementsMap.get(`${parseInt(HorizontalPos + 1)}${parseInt(VerticallPos + 1)}`) === CheckingPlayer &&
+    // UsedElementsMap.get(`${parseInt(HorizontalPos - 1)}${parseInt(VerticallPos -1)}`) === CheckingPlayer)
+    // {
+    //     Win(FirstPlayerTurn);
+    // }
+}
+
+function Win(FirstPlayerTurn, line)
+{
+    GameIsFinished = true;
+    //WiningText.innerText = `${FirstPlayerTurn ? "First" : "Second"}` + " player WINS!!!";
+    CurrentPlayerText.innerText = `${FirstPlayerTurn ? "First" : "Second"}` + " player WINS!!!";
+    PreviousTurnButton.disabled = true;
+    line.forEach(element => {
+        // document.getElementById(`${element}`).className += " winingLine";
+        var elem = document.getElementById(`${element}`);
+        elem.firstChild.className += " winingLine";
+    });
+}
+
+function Teko()
+{
+    GameIsFinished = true;
+    CurrentPlayerText.innerText = "Teko";
+    PreviousTurnButton.disabled = true;
+}

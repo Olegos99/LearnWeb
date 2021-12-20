@@ -1,0 +1,118 @@
+<html>
+<head>
+    <!-- link to bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet">
+    <link href="PictureViewerStyle.css" rel="stylesheet">
+</head>
+<body id="app">
+
+<div class="place_in_mid">
+    <table border="1px" width="200px" height="200px">
+        <!-- tr - Table Row -->
+        <tr>
+            <!-- td - Table Data/Cell  -->
+            <td>oleg</td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"> Cool link</a></td>
+        </tr>
+        
+        <tr>
+            <td><img src="https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg" width="500px" style="height: 100px;width: 100px;"></image></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td> <ul type="sircle">
+                <li>Dana</li>
+                <li>Ronen</li>
+                <li>Noam</li>
+            </ul>
+            </td>
+            <td class="small">
+                <table border="1px" width="100px" height="100px">
+                    <tr><td class="small">One</td><td class="small">Two</td></tr>
+                    <tr><td class="small">Three</td><td class="small">Four</td></tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<br><br>
+
+<div id ="MyComponents"></div>
+
+<br><br>
+
+<!-- action = " name.php / html" you can accsess any type of backend by this
+method="post" - is with no query string
+method="post" - is with query string -->
+<form action="MyServer.html" method="get">
+    <label for="fname">First name:</label>
+    <input type="text" id="fname" name="fname" onchange="FirstNameUpdate()"><br><br>
+    <label for="lname">Last name:</label>
+    <input type="text" id="lname" name="lname" onchange="LastNameUpdate()"><br><br>
+        <div id="root"></div><br><br>
+    <label for="fname">Gender:</label>
+        <div>
+            <label for="Gender1" id="Male">Male</label>
+            <input type="radio" id="Gender1" name="genderValue" value="Male">
+            <br>
+            <label for="Gender2" id="Shemale">Shemale</label>
+            <input type="radio" id="Gender2" name="genderValue" value="Shemale">
+        </div>
+    <br>  
+    <label for="AdultBool">Adult?</label>
+    <input type="checkbox"id="AdultBool" name="Adult">
+    <br>
+    <label for="City">City</label>
+    <br>
+    <select name="City" id="cityes">
+        <option value="Haifa">Haifa</option>
+        <option value="Ashdod">Ashdod</option>
+        <option value="Jerusalaim">Jerusalaim</option>
+      </select>
+
+    <br><br>
+
+    <table table border="1px" width="200px" height="100px">
+        <tr>
+            <td>
+            <label for="UserName">User:</label>
+            <input type="text" id="UserName" name="UserName">
+            <label for="UserPassword">Password:</label>
+            <input type="password" id="UserPassword" name="UserPassword">
+        </td>
+        </tr>
+
+    </table>
+
+    <br><br>
+    <input type="submit" value="Submit">
+    <input type="reset" value="Reset">
+  </form>
+
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js" crossorigin></script>
+
+  <script type="text/babel" src="Clock.JS"></script>
+  <script type="text/babel" src="TogleButton.JS"></script>
+  <script type="text/babel" src="PicturesViever.JS"></script>
+  <script type="text/babel" src="SortArrayComponent.JS"></script>
+  <script type="text/babel" src="Main.JS"></script>
+  <script type="text/babel" src="Images_To_Show.JS"></script>
+
+
+</body>
+
+</html>

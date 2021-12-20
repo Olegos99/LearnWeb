@@ -1,0 +1,223 @@
+<html>
+    <body>
+<!-- <input type = "text" id = "input"/><br/><br/>
+Hava a Licence?
+<input type= "checkbox" id = "HavaALicence">
+<br/><br/>
+<button onclick="AddnewPerson()">Register</button> -->
+
+<table id = "listOfPersons" style="border-width: 3px; border-style: dotted;"></table>
+
+        <script>
+            // let name = document.getElementById("input");
+            // let haveAlicence = document.getElementById("HavaALicence");
+            // let place = document.getElementById("listOfPersons");
+
+            // function AddnewPerson()
+            // {
+            //     var newElement = document.createElement("tr");
+            //     place.append(newElement);
+                
+            //     var newElementChild = document.createElement("td");
+
+            //     newElementChild.innerText = name.value + `${haveAlicence.checked ?  " have " : " dont have "}` + "a licence";
+            //     newElementChild.style.borderStyle = "dotted";
+
+            //     newElement.append(newElementChild);
+
+            //     name.value = '';
+            //     haveAlicence.checked = false;
+            // }
+
+            // class Calc{
+            //     constructor(x,y)
+            //     {
+            //         this.x = parseInt(x);
+            //         this.y = parseInt(y);
+            //     }
+
+            //     Add()
+            //     {
+            //         console.log("Summ is: " + `${this.x + this.y}`);
+            //     }
+
+            //     Mul()
+            //     {
+            //         console.log("Multiplication is: " + this.x * this.y);
+            //     }
+
+            //     PrintBigger()
+            //     {
+            //         console.log("Bigest number is: " + `${this.x > this.y ? this.x : this.y}`);
+            //     }
+            // }
+
+            // var Try = new Calc(5,7);
+            // Try.Add();
+            // Try.Mul();
+            // Try.PrintBigger();
+
+            // class Person
+            // {
+            //     constructor(name = "", age = 0)
+            //     {
+            //         this.id = "";
+            //         this.name = name;
+            //         this.age = age;
+            //         this.phones = [];
+            //     }
+
+            //     AddPhone(number)
+            //     {
+            //         this.phones.push(number);
+            //         this.printPhones();
+            //     }
+
+            //     printPhones()
+            //     {
+            //         console.log(this.phones);
+            //     }
+
+            //     printData()
+            //     {
+            //         console.log(this);
+            //     }
+
+            //     getBirthYear()
+            //     {
+            //         console.log(new Date().getFullYear() - this.age);
+            //     }
+            // }
+
+
+            // var Alex = new Person("Alex", 22);
+            // Alex.printData();
+            // Alex.getBirthYear();
+            // Alex.printPhones();
+            // Alex.AddPhone("0546564168546");
+            // Alex.AddPhone("121454787");
+            // Alex.printData();
+
+            class Shool{
+                constructor(name, students)
+                {
+                    this.name = name;
+                    this.students = students != undefined ? students : [] ;
+                }
+
+                AddStudent(student)
+                {
+                    this.students.push(student);
+                    console.log(student.name + " joined " + this.name + " average grade: " + student.CalculateStudentAverage());
+                }
+
+                GetShoolAverageGrade()
+                {
+                    var sum = 0;
+                    for(var i = 0; i< this.students.length; i++)
+                    {
+                        sum += this.students[i].CalculateStudentAverage();
+                    }
+                    return (sum/this.students.length);
+                }
+
+                printShoolAverageGrade()
+                {
+                    console.log(this.name + "'s average grade is: " + this.GetShoolAverageGrade());
+                }
+            }
+
+            class Student
+            {
+                constructor(name, id, grades)
+                {
+                    this.name = name;
+                    this.id = id;
+                    this.grades = grades != undefined ? grades : [];
+                    this.MAXgradevalue = 100;
+                    this.MINgradevalue = 0;
+                }
+
+                AddGrades(grades)
+                {
+                    console.log(grades.length);
+                    for(var i = 0; i < grades.length; i++)
+                    {
+                        if(grades[i] > this.MAXgradevalue || grades[i] < this.MINgradevalue)
+                        {
+                            console.log(grades[i] + " - is not a valid grade"); 
+                        }
+                        else{
+                            this.grades.push(grades[i]);
+                        }
+
+                    }
+                    console.log(this);
+                }
+                AddGrade(grade)
+                {
+                    if(grade > this.MAXgradevalue || grade < this.MINgradevalue)
+                    {
+                        console.log(grade + " - is not a valid grade"); 
+                    }
+                    else{
+                        this.grades.push(grade);
+                        console.log("Added a new grade: " + grade);
+                    }
+                }
+
+                CalculateStudentAverage()
+                {
+                    var sum = 0;
+                    //console.log(this.Grades.lenght);
+                    for(var q = 0;q < this.grades.length; q++)
+                    {
+                        sum += parseInt(this.grades[q]);
+                    }
+                    //console.log("sum is " + sum);
+                    return (parseFloat(sum/this.grades.length));
+                }
+
+                printStudentAverage()
+                {
+                    var num = this.CalculateStudentAverage();
+                    console.log(`${this.name}'s grades average is: ${num}`);
+                }
+            }
+
+
+
+            var pers1 = new Student("Josh", 1, [45,60,98]);
+            var grds = [ '35', '55','-23','150', '88', '99','56' ]; 
+            pers1.AddGrades(grds);
+            pers1.AddGrade(-250);
+            pers1.AddGrade(50);
+            pers1.printStudentAverage();
+            var pers2 = new Student("Oleg", 2);
+            var grds = [ '100', '100','-23','150', '99', '89','100' ]; 
+            pers2.AddGrades(grds);
+            pers2.printStudentAverage();
+            var pers3 = new Student("Maria", 3);
+            var grds = [ '70', '55','-23','150', '88', '99','68' ]; 
+            pers3.AddGrades(grds);
+            pers3.printStudentAverage();
+            var pers4 = new Student("Michael", 4);
+            var grds = [ '60', '50', '89','100' ]; 
+            pers4.AddGrades(grds);
+            pers4.printStudentAverage();
+
+            let dudes = [pers1,pers4];
+
+            var shool1 = new Shool("Harvard", dudes);
+            shool1.AddStudent(pers3);
+            // shool1.AddStudent(pers3);
+            shool1.printShoolAverageGrade();
+            shool1.AddStudent(pers2);
+            shool1.printShoolAverageGrade();
+
+        </script>
+    
+    </body>
+  
+</html>
+

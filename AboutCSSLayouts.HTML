@@ -1,0 +1,79 @@
+<html>
+
+<head>
+    <style>
+body
+{
+margin: 0;
+}
+.container
+{
+    width: 100vw;
+    height: 100vh;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 50px 1fr 1fr 100px 1fr;
+    gap: 10px; 
+    padding: 10px;
+
+    box-sizing: border-box;
+}
+
+nav{
+    display:  flex;
+    justify-content: space-evenly;
+    flex-wrap: nowrap;
+}
+
+nav a{
+    color :yellow;
+}
+
+.header{
+background-color: rgb(34, 243, 7);
+grid-column-start: 1;
+grid-column-end: 4;
+}
+.content1
+{
+    background-color: burlywood;
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+.content2
+{
+    background-color: seagreen;
+    grid-row-start: 3;
+    grid-row-end: 5;
+}
+.content3
+{
+    background-color: red;
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+<div class="header">
+    <nav>
+        <a href="#">home</a>
+        <a href="#">sdfsd</a>
+        <a href="#">qwezfas</a>
+        <a href="#">qwrfsdfg</a>
+    </nav>
+</div>
+<div class="content1">Compopnent2</div>
+<div class="content2">Compopnent3</div>
+<div class="content3">Compopnent4</div>
+<div>Compopnent5</div>
+<div>Compopnent6</div>
+<div>Compopnent7</div>
+<div>Compopnent8</div>
+<div>Compopnent9</div>
+
+    </div>
+</body>
+
+</html>

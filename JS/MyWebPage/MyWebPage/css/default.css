@@ -1,0 +1,139 @@
+﻿/* {
+    margin: 0;
+    padding:0;
+}
+    
+
+.wrapper {
+    margin: 0 auto;
+    width: 1000px;
+}
+    */
+
+.body {
+    background-color: white;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    position: sticky;
+}
+p.relative {
+    text-align: center;
+    margin-top: 50px;
+}
+.name {
+    text-align: center;
+}
+
+img.MyPhoto {
+    transform: rotate(270deg);
+    width: 400px;
+    height: 250px;
+    background-image: url(images/20180212_211415.jpg);
+    background-size: contain;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 100px;
+}
+
+.ModeButton {
+    background-color: white;
+    border: 3px solid black;
+    color: black;
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    margin: 5px 3px;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: 0px;
+    margin-top: 0px;
+    border-radius: 100%;
+}
+.button1 {
+    background-color: white;
+    border: 2px solid #ff0000;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+    border-radius: 50%;
+    -webkit-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    box-shadow: 0 9px #999;
+}
+    .button1:hover {
+        background-color: #ff0000 !important;
+        color: white !important;
+    }
+    .button1:active {
+        background-color: #15dd25;
+        box-shadow: 0 5px #666;
+        transform: translateY(5px);
+    }
+.button2 {
+    background-color: white;
+    border: 2px solid #ff0000;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+    border-radius: 50%;
+    -webkit-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    box-shadow: 0 9px #999;
+}
+    .button2:hover {
+        background-color: #ff0000 !important;
+        color: white !important;
+    }
+    .button2:active {
+        background-color: #ff0000;
+        box-shadow: 0 5px #666;
+        transform: translateY(5px);
+    }
+.button3 {
+    background-color: white;
+    border: 2px solid #ff0000;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+    border-radius: 50%;
+    -webkit-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    box-shadow: 0 9px #999;
+}
+    .button3:hover {
+        background-color: #ff0000 !important;
+        color: white !important;
+    }
+.button3:active {
+    background-color: #ffd800;
+    box-shadow: 0 5px #666;
+    transform: translateY(5px);
+}

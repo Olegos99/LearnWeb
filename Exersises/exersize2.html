@@ -1,0 +1,34 @@
+<html>
+    <body>
+        <h1>
+            Flight Reservation
+        </h1>
+        <form action="/MyServer.html" method="get">
+        From: 
+        <input type="text" name ="from" id = "Departure county">
+        To: 
+        <input type="text" name ="to" id = "Ariving county"><br><br>
+        Departure Date:
+        <input type="date" name="Departure Date">
+        Landing Date:
+        <input type="date" name="Landing Date"><br><br>
+
+        <div>Number of passengers: </div>
+        <input type="number" id="Numbers of passengers" name="Numbers of passengers" min="1">
+
+        <br>
+        <div>Valid passport: </div>
+        <input type="checkbox" name="PassportValidation">
+        <br>
+        <div>Number of bags: </div>
+        <select name="Bags Number" id="bags">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+          <br>
+        <input type="submit">
+
+        </form>
+    </body>
+</html>

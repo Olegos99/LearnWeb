@@ -1,0 +1,91 @@
+h1{
+    color : blue;
+}
+h2{
+    color : red;
+}
+tr{
+    display: flex;
+    flex-direction: row;
+    background-color: green; 
+    color: white;
+}
+table{
+    text-align: center;
+}
+
+td{
+    width: 100px;
+    height: 100px;
+    display:  block;
+    justify-content: center;
+    text-align: center;
+}
+
+td.small{
+    width: auto;
+    height: auto;
+    display:  block;
+    justify-content: center;
+}
+
+body
+{
+    text-align: center;
+    background-color: cornflowerblue;
+}
+
+.place_in_mid
+{
+    text-align: center;
+    justify-content: center;
+    margin: auto;
+}
+
+
+#Male
+{
+    background-color: blue;
+    color: white;
+}
+#Shemale
+{
+    background-color: pink;
+    color: black;
+}
+
+#ArrayReprezentation
+{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: nowrap;
+    margin: auto;
+}
+
+.ArrayElement
+{
+    background-color: black;
+    color: white;
+    outline: auto;
+    outline-width: 3px;
+    outline-color: black;
+}
+
+#CurrentElement
+{
+    /* background-color: yellow; */
+    outline: auto;
+    outline-width: 3px;
+    outline-color: yellow;
+}
+
+#ElementToCompare
+{
+    outline: auto;
+    outline-width: 3px;
+    outline-color: wheat;
+}
+
+
+
+

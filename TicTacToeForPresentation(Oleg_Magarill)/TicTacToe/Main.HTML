@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <link href="TicTacToeStyle.css" rel="stylesheet">
+    </head>
+<body>
+    <div id="Game">
+        Set the board Size:
+        <input id="gameSize" type="range" min="3" max = "7" onchange="ResetGameSize()" value=3>
+        <div id="gameSizetext"></div>
+        <h2 id="GoalText">Placeholder for goal text</h2>
+        Choose new goal:
+        <input id = "goalInput" type = "number" min ="3" value = 3>
+        <button id = "GoalButton" onclick="SetNewGoal()"><b>Set this goal</b></button>
+        <br/><br/>
+        <button id = "Restart"onclick="ResetGameSize()">Restart Game</button>
+        <button id = "OneStepBack" onclick="OneStepBack()">Previous turn</button> 
+        <br/><br/>
+        <table id ="GameTable"></table>    
+        <br/>
+        <h2 id="CurrentPlayerText"></h2>
+    </div>
+    <script src="TicTacToe.JS"></script>
+</body>
+</html>

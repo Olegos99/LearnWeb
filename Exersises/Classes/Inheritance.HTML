@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<body>
+    Your id: <input id ="id" type = "text"/> <br/>
+    Your Name: <input id ="name" type = "text"/><br/>
+    Your Proffesion: <input id ="proff" type = "text"/><br/>
+<button onclick="AddStudent()">Add new student</button><br/>
+<button onclick="ShowAllStudents()">Show Students</button><br/>
+<table id = "studentsTable" style="border: solid;"></table>
+
+    <script>
+        class Student{
+            constructor(id, name, prof)
+            {
+                this.id = id;
+                this.name = name;
+                this.proffesion = prof;
+            }
+        }
+
+        class College
+        {
+            constructor()
+            {
+                this.Students = [];
+                this.studentElements = [];
+            }
+            AddStudent()
+            {
+                var id = document.getElementById("id");
+                var name = document.getElementById("name");
+                var prof = document.getElementById("proff");
+
+                var NewStudent = new Student(id.value, name.value, prof.value);
+                this.Students.push(NewStudent);
+
+                id.value = "";
+                name.value = "";
+                prof.value = "";
+                console.log(this.Students);
+            }
+            ShowAllStudents()
+            {
+                this.studentElements.forEach(element => {
+                    element.remove();
+                });
+
+                var place = document.getElementById("studentsTable");
+
+                var newRow = document.createElement("tr");
+                    newRow.style = "border:solid"
+                    newRow.className = "defaultTD";
+
+                    this.studentElements.push(newRow);
+
+                    var id = document.createElement("td");
+                    var name = document.createElement("td");
+                    var proffession = document.createElement("td");
+                    id.style = "border:solid"
+                    name.style = "border:solid";
+                    proffession.style = "border:solid";
+                    id.innerHTML = "Student ID";
+                    name.innerHTML = "StudentName";
+                    proffession.innerHTML = "Student proffesion";
+                    newRow.append(id);
+                    newRow.append(name);
+                    newRow.append(proffession);
+                    place.append(newRow);
+
+                this.Students.forEach(element => {
+                    var newRow = document.createElement("tr");
+                    newRow.style = "border:solid"
+                    newRow.className = "student";
+                    this.studentElements.push(newRow);
+                    var id = document.createElement("td");
+                    var name = document.createElement("td");
+                    var proffession = document.createElement("td");
+                    id.style = "border:solid"
+                    name.style = "border:solid";
+                    proffession.style = "border:solid";
+                    id.innerHTML = element.id;
+                    name.innerHTML = element.name;
+                    proffession.innerHTML = element.proffesion;
+                    place.append(newRow);
+                    newRow.append(id);
+                    newRow.append(name);
+                    newRow.append(proffession);
+                });
+            }
+
+        }
+
+        const colledge1 = new College();
+        
+        function AddStudent()
+        {
+            colledge1.AddStudent();
+        }
+
+        function ShowAllStudents()
+        {
+            colledge1.ShowAllStudents();
+        }
+
+
+
+
+
+
+
+        // class Person{
+        //     constructor(id, name)
+        //     {
+        //         this.id = id;
+        //         this.name = name;               
+        //     }
+        //     printData() 
+        //     {
+        //         console.log(this);
+        //     }
+        // }
+        // class Student extends Person{
+        //         constructor(id, name){
+        //             super(id, name);
+        //         }
+        //     }
+
+        //     const st1 = new Student();
+        //     st1.name = "yosef";
+        //     st1.id = 1;
+
+        //     const s2 = new Student(2, "Avi");
+
+        //     st1.printData();
+        //     s2.printData();
+
+        // class Animal{
+        //     constructor(legNum)
+        //     {
+        //         //this.color = color != undefined ? color : "none";
+        //         this.LegNum = legNum != undefined ? legNum : "none";
+        //     }
+        //     printAllData()
+        //     {
+        //         console.log(this);
+        //     }
+
+        //     eat()
+        //     {
+        //         console.log("Animal is eating");
+        //     }
+        // }
+
+        // class Zebra extends Animal{
+        //     constructor(legNum, StripNum)
+        //     {
+        //         super(legNum);
+        //         this.StripNum = StripNum;
+        //     }
+        //     printZebrasData()
+        //     {
+        //         console.log(this);
+        //     }
+        //     eat()
+        //     {
+        //         console.log(`Zebra with ${this.StripNum} strips is eating`);
+        //     }
+        // }
+
+        // class Monkey extends Animal{
+        //     constructor(legNum, color)
+        //     {
+        //         super(legNum);
+        //         this.color = color;
+        //     }
+        //     printMonkeyData()
+        //     {
+        //         console.log(this);
+        //     }
+        //     eat()
+        //     {
+        //         console.log(`Monkey with ${this.color} skin is eating`);
+        //     }
+        // }
+
+        // class Shimpanze extends Monkey{
+        //     constructor(legNum, color, height)
+        //     {
+        //         super(legNum, color);
+        //         this.height = height;
+        //     }
+        //     printShimpanzesData()
+        //     {
+        //         console.log(this);
+        //     }
+        //     eat()
+        //     {
+        //         console.log(`Shimpanze with ${this.color} skin is eating, it's height is ${this.height}`);
+        //     }
+        // }
+
+        // class Zoo{
+        //     constructor(animals)
+        //     {
+        //         this.animals = animals != undefined ? animals:[];
+        //     }
+        //     addAnimal(animal)
+        //     {
+        //         this.animals.push(animal);
+        //         console.log(`animal was added to the zoo`);
+        //     }
+        //     countAnimals()
+        //     {
+        //         console.log(`There are ${this.animals.length} animals in the Zoo`);
+        //     }
+        //     FeedAnimals()
+        //     {
+        //         this.animals.forEach(element => {
+        //             element.eat();
+        //         });
+        //     }
+        // }
+        // var anim1 = new Animal(4);
+        // anim1.printAllData();
+        // anim1.eat();
+        // var anim2 = new Zebra(4, 123);
+        // anim2.printZebrasData();
+        // anim2.eat();
+        // var anim3 = new Monkey(4, "Brown");
+        // anim3.printMonkeyData();
+        // anim3.eat();
+        // var anim4 = new Shimpanze(4, "Brown", "2m 12cm");
+        // anim4.printShimpanzesData();
+        // anim4.eat();
+
+        // var Zoo1 = new Zoo([anim1,anim2]);
+        // Zoo1.countAnimals();
+        // Zoo1.addAnimal(anim3);
+        // Zoo1.addAnimal(anim4);
+        // Zoo1.countAnimals();
+        // Zoo1.FeedAnimals();
+
+        // class Cat extends Animal{
+        //     constructor(legNum, nickname)
+        //     {
+        //         super(color, legNum);
+        //         this.nickname = nickname != undefined ? nickname : "none";
+        //     }
+        //     sleep()
+        //     {
+        //         console.log(`${this.nickname} is sleeping now`);
+        //     }
+        // }
+
+        // const SomeCat = new Cat("black", 4, "Haku");
+        // SomeCat.printAllData();
+        // SomeCat.sleep();
+        // SomeCat.eat();
+
+    </script>
+</body>
+
+</html>
