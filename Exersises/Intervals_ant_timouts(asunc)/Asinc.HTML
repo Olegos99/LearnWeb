@@ -1,0 +1,50 @@
+<html>
+    <body>
+        <script>
+            // function getData(){
+            //     return new Promise((resolve) => {
+            //         setTimeout(() => 
+            //             resolve("Hello")
+            //         , 2000);
+            //     })
+            // }
+
+            // getData().then(data => console.log(data));
+
+            // const doSomething = (num) => {
+            //     const prom = new Promise((resolve)=> {
+            //         setTimeout(() => {
+            //             resolve(num*2)
+            //         }, 2000);
+            //     })
+            //     return prom;
+            // }
+
+            // doSomething(2).then(response => console.log(response))
+
+            // function CounSumWithDelay (arr)
+            // {
+            //     return new Promise((resolve) => {
+            //         setTimeout(() => {
+            //             resolve(arr.reduce((x,y) => x+y))
+            //         }, 3000);
+            //     })
+            // }
+
+            // CounSumWithDelay([4,2,7,1]).then(result => console.log(result));
+
+            function ReturnBigerWithDelay(x,y)
+            {
+                return new Promise((resolve) =>
+                {
+                    setTimeout(() => {
+                        resolve(x > y ? x : y);
+                    }, 2000);
+                });
+            } 
+
+            ReturnBigerWithDelay(234,21).then(result => console.log(result));
+
+        </script>
+    </body>
+</html>

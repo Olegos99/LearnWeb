@@ -1,4 +1,5 @@
 class SortArray extends React.Component{
+  
     constructor(props){
         super(props);
         this.state = {
@@ -15,8 +16,6 @@ class SortArray extends React.Component{
               AnimationTimout: null
             };
 
-
-
         this.handleArrayElementClick = this.handleArrayElementClick.bind(this);     
         this.ToggleAnimation = this.ToggleAnimation.bind(this);
         this.AnimationTick = this.AnimationTick.bind(this);
@@ -28,9 +27,23 @@ class SortArray extends React.Component{
         this.Restart = this.Restart.bind(this);
         this.ToggleAnimationHandler = this.ToggleAnimationHandler.bind(this);     
         this.getRandomIntInclusive = this.getRandomIntInclusive.bind(this);     
+        this.SetNewAnimStepDuration = this.SetNewAnimStepDuration.bind(this);     
         
     }
 
+
+    SetNewAnimStepDuration()
+    {
+      var inpF = document.getElementById("speedInput").value;
+      console.log(inpF);
+      this.setState({
+        AnimationStepDuration: inpF
+      });
+      if(!this.state.Finished)
+      {
+        this.StopAnimation();
+      }
+    }
 
 
     componentDidMount() {
@@ -93,8 +106,10 @@ class SortArray extends React.Component{
       finished()
       {
         this.setState({Finished:true});
+        this.setState({Animating:false});
         // this.setState({StringToShow: "Finished"});
-        setTimeout(() => {   this.setState({StringToShow: "Finished"}); }, this.state.AnimationStepDuration);
+        console.log("FINISHED WAS COLLED (will happend in " + this.state.AnimationStepDuration);
+        setTimeout(() => {   this.setState({StringToShow: "Finished"}); }, (this.state.AnimationStepDuration));
         setTimeout(() => {   this.SetDefaulIds(); }, this.state.AnimationStepDuration);
       };
 
@@ -144,7 +159,7 @@ class SortArray extends React.Component{
       if(!this.state.Finished)
       {
           this.setState({Animating: !this.state.Animating});
-          this.state.timeouts.push(setTimeout(() => {   this.ToggleAnimation(); }, 10));        
+          this.state.timeouts.push(setTimeout(() => { this.ToggleAnimation(); }, 10));        
       }
     };
 
@@ -154,6 +169,10 @@ class SortArray extends React.Component{
 
       if(this.state.Animating)
       {
+        var inpF = document.getElementById("speedInput").value;
+        this.setState({
+          AnimationStepDuration: inpF
+        });
         this.AnimationTick();
       }
       else
@@ -206,6 +225,8 @@ class SortArray extends React.Component{
       {
         this.setState({MadeFirstStep: true}); 
       }
+
+
       
         // if(this.state.J < this.state.MyArrayLenght-this.state.I-1)
         // {
@@ -238,9 +259,10 @@ class SortArray extends React.Component{
 
         if (this.state.MyArray[this.state.J] > this.state.MyArray[this.state.J+1])
         {
-          // this.state.timeouts.push(setTimeout(() => {  this.swap(this.state.MyArray,this.state.J,this.state.J+1); }, this.state.AnimationStepDuration/2));
-          this.setState({AnimationTimout:setTimeout(() => {  this.swap(this.state.MyArray,this.state.J,this.state.J+1); }, this.state.AnimationStepDuration/2)});
+          this.state.timeouts.push(setTimeout(() => {  this.swap(this.state.MyArray,this.state.J,this.state.J+1); }, this.state.AnimationStepDuration/2));
+          //this.setState({AnimationTimout:setTimeout(() => {  this.swap(this.state.MyArray,this.state.J,this.state.J+1); }, this.state.AnimationStepDuration/2)});
           console.log("AnimationTimout: " + this.state.AnimationTimout);
+
           //setTimeout(() => {  this.swap(this.state.MyArray,this.state.J,this.state.J+1); }, this.state.AnimationStepDuration/2);        
         }
         else
@@ -257,6 +279,11 @@ class SortArray extends React.Component{
        //buble sort logic
       //  console.log("this.state.timeouts: " + this.state.timeouts.length);
         //make final chek
+        // if(this.state.I >= this.state.MyArrayLenght-1)
+        // {
+        //     clearInterval(this.timerID);
+        //     this.finished();
+        // }
         if(this.state.I >= this.state.MyArrayLenght-1)
         {
             clearInterval(this.timerID);
@@ -280,6 +307,7 @@ class SortArray extends React.Component{
 
  swap(arr, xp, yp)
 {
+
     var temp = arr[xp];
     arr[xp] = arr[yp];
     arr[yp] = temp;
@@ -291,7 +319,6 @@ class SortArray extends React.Component{
     this.setState({
         MyArray: arr
     });
-
     this.continueOrStartNewIteration();
 };
  
@@ -332,9 +359,10 @@ class SortArray extends React.Component{
             <Toggle onChange={() => {this.handleNextStepButtonClick()}}
             TogleONText = "Next Step"
             TogleOFFText = "Next Step"
-            Disabled = {this.state.Finished}
+            Disabled = {this.state.Finished && !this.state.Animating || this.state.Animating}
             /> 
             </nav>  
+            <input id="speedInput" type ="range" min = {10} max = {3000} onChange={() => {this.SetNewAnimStepDuration()}} ></input>
             <br/>   <br/>      
             <nav id= "ArrayReprezentation">
                 {this.state.MyArray.map((element,i) => (
