@@ -33,17 +33,38 @@
 
             // CounSumWithDelay([4,2,7,1]).then(result => console.log(result));
 
-            function ReturnBigerWithDelay(x,y)
+            function ReturnBigerWithDelay(x,y) // way 1   // way 2
             {
                 return new Promise((resolve) =>
                 {
                     setTimeout(() => {
                         resolve(x > y ? x : y);
-                    }, 2000);
+                    }, 4000);
                 });
             } 
 
-            ReturnBigerWithDelay(234,21).then(result => console.log(result));
+            function ReturnBigerWithDelay2(x,y) // way 1   // way 2
+            {
+                return new Promise((resolve) =>
+                {
+                    setTimeout(() => {
+                        resolve(x > y ? x : y);
+                    }, 3000);
+                });
+            } 
+
+            async function DosomethingOnReturnValueFromAsyncFunc()  // way 2 async await
+            {
+                const result = await ReturnBigerWithDelay(250456,32); // whait for result (continue olny on geting result) 4s
+                console.log("result1 = " + result);
+                const result2 = await ReturnBigerWithDelay2(1234567,2345); // whait for result(continue olny on geting result) 3s
+                console.log("result2 = " + result2);
+                console.log("bigest number is: " + (result > result2 ? result : result2));// will be printed after 7 seconds
+            }
+
+            ReturnBigerWithDelay(234,21).then(result => console.log(result));  // way 1
+
+            DosomethingOnReturnValueFromAsyncFunc();// way 2
 
         </script>
     </body>
