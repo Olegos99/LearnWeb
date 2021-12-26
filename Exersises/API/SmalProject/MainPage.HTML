@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <body onload="FillTheTable()">
+        <h1>
+            Film Editor Page
+        </h1>
+        <button onclick="CreateNew()">Create New Movie</button>
+        <table id="MainTable">
+            <tr><th>Film Name</th><th>Film Poster</th><th>Edit</th><th>Delete</th></tr>
+        </table>
+
+        <script>
+            const filmsUrl = "https://api.tvmaze.com/shows";
+            async function FillTheTable()
+            {
+                const films = await fetch(filmsUrl);
+
+                if(films.ok)
+                {
+                    const FilmsData = await films.json();
+                    for(i = 0; i < 10 ; i ++)
+                    {
+                        CreateFilmTR(FilmsData[i].name, FilmsData[i].image.medium, i);
+                    }
+                }
+                else
+                console.log("An Error oqured");
+            }
+
+            function CreateFilmTR(FilmName, FilmPosterSrc, FilmId)
+            {
+                var placeToAdd = document.getElementById("MainTable");
+                var NewTR = document.createElement("tr");
+                var movieName = document.createElement("h3");
+                var movieImage = document.createElement("img");
+
+                NewTR.id = FilmId;
+
+                NewTR.innerHTML=`
+                <td class="child">${FilmName}</td>
+                <td class="child"><img src="${FilmPosterSrc}"></td>
+                <td class="child"><button onclick="Update(${FilmId})">Update</button></td>
+                <td class="child"><button onclick="Delete(${FilmId})">Delete</button></td>
+                `;
+                placeToAdd.append(NewTR);
+            }
+
+            function Update(id)
+            {
+                var parent = document.getElementById(id);
+                var children = parent.querySelectorAll('.child');
+                sessionStorage.setItem("Edit film with id", id);
+                sessionStorage.setItem("Edit film with name", children[0].innerHTML);
+                window.location.href = '\EditFilmScreen.HTML';
+            }
+
+            function Delete(id)
+            {
+                sessionStorage.setItem("DELITE film with id", id);
+                var parent = document.getElementById(id);
+                var children = parent.querySelectorAll('.child');
+                //request for deliting
+                alert(`You delited permanetly at film ${children[0].innerHTML}.`);
+            }
+            function CreateNew()
+            {
+                window.location.href = '\CreateNewMoviePage.HTML';
+            }
+        </script>
+        
+    </body>
+</html>

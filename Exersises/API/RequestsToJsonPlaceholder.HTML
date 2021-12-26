@@ -24,8 +24,8 @@
         UserId: <input type="number" id = "todoId">
         <button onclick="GetTododByID()">Get todos</button>
 
-        <table id = "AllusersTable">
-            <tr><td>id</td><td>name</td><td>email</td></tr>
+        <table id = "AllusersTable" border = "1">
+            <tr><th>id</th><th>name</th><th>email</th></tr>
         </table>
 
         <script>
@@ -143,10 +143,8 @@
                                 }
                             }
 
-                        if(data.name[0] == "E")
-                        {
-                            PrintUserToDos(UserId);
-                        }
+                        if(data.name[0] == "E") 
+                            PrintUserToDos(UserId); 
                     }
                     else{
                         console.log("Error");
@@ -212,16 +210,26 @@
 
                 data.forEach(obj => {
                 var newTR = document.createElement("tr");
-                var IdTd = document.createElement("td");
-                var NameTd = document.createElement("td");
-                var EmailTd = document.createElement("td");
-                IdTd.innerHTML = obj.id;
-                NameTd.innerHTML = obj.name;
-                EmailTd.innerHTML = obj.email;
+                // // v1
+                // var IdTd = document.createElement("td");
+                // var NameTd = document.createElement("td");
+                // var EmailTd = document.createElement("td");
+                // IdTd.innerHTML = obj.id;
+                // NameTd.innerHTML = obj.name;
+                // EmailTd.innerHTML = obj.email;
 
-                newTR.append(IdTd);
-                newTR.append(NameTd);
-                newTR.append(EmailTd);
+                // newTR.append(IdTd);
+                // newTR.append(NameTd);
+                // newTR.append(EmailTd);
+                // // v1
+
+                //v2
+                newTR.innerHTML=`
+                <td>${obj.id}</td>
+                <td>${obj.name}</td>
+                <td>${obj.email}</td>
+                `;
+                //v2
                 placeToAdd.append(newTR);
                 });
             }

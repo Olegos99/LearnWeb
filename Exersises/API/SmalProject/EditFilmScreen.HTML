@@ -1,0 +1,23 @@
+<html>
+    <body onload="setCurrentFilmData()">
+        <H1 id = "Greeting text"></H1>
+
+
+
+
+        <button onclick="SubmittChanges()">Save Changes</button>
+        <script>
+            function setCurrentFilmData()
+            {
+                document.getElementById("Greeting text").innerHTML = `Edition of "${sessionStorage.getItem("Edit film with name")}" film`;
+            }
+            function SubmittChanges()
+            {
+                //request for editing film (put)
+
+
+                window.location.href = '\MainPage.HTML';
+            }
+        </script>
+    </body>
+</html>
