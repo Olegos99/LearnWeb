@@ -1,3 +1,10 @@
+// git init : initialized the git repository
+// git add -A : adds all files in the current directory
+// git config --global user.email "my-email"
+// git config --global user.name "my-name"
+// git commit -m "message for the update"
+// git push -u origin main
+
 'use strict';
 
 const user= {

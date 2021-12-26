@@ -1,0 +1,230 @@
+<html>
+    <body>
+        <button onClick=GetAll1()>Get All 1</button>
+        <button onClick=GetAll2()>Get All 2</button>
+        <br><br>
+        <input type="number" id = "userId">
+        <button onclick="GetuserById()">Get user by id</button><br>
+
+        Name: <input type="text" id="name"></input><br>
+        Email: <input type="text" id="email"></input>
+        <button onclick="UpdateUser()">Update This User Information</button>
+        <ol id="ListOfToDos">
+
+        </ol>
+
+        <br><br>
+
+
+        <button onclick="PostNewUser()">Post new user</button><br>
+        Name: <input type="text" id="NameForNewUser"><br>
+        Email: <input type="text" id="EmailForNewUser"><br>
+
+        <br><br>
+        UserId: <input type="number" id = "todoId">
+        <button onclick="GetTododByID()">Get todos</button>
+
+        <table id = "AllusersTable">
+            <tr><td>id</td><td>name</td><td>email</td></tr>
+        </table>
+
+        <script>
+            const usersUrl = "https://jsonplaceholder.typicode.com/users";// using plasholder webservise to test requests
+            const TodosUrl = "https://jsonplaceholder.typicode.com/todos";// using plasholder webservise to test requests
+
+            async function GetTododByID()
+            {
+                var todouserId = document.getElementById("todoId").value;
+                const responce = await fetch(`${TodosUrl}${"?userId="}${todouserId}`);
+                if(responce.ok) {
+                   const todosdata = await responce.json();
+                   todosdata.forEach(element => {
+                    console.log(element.title);
+                   });
+                   
+                }
+            }
+
+            async function UpdateUser()
+            {
+                const User = {
+                    name : document.getElementById("name").value,
+                    email : document.getElementById("email").value
+                }            
+                //send request and await for responce
+                //sending url AND some SETINGS
+                // good example - requests in POSTMAN
+                const responce = await fetch(`${usersUrl}/${document.getElementById("userId").value}`, {
+                    method : "put", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                    headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
+                    body: JSON.stringify(User) //convert user to json and send in rquest body
+                });
+
+                // responce does not contains info 
+                if(responce.ok)
+                {
+                    const data = await responce.json(); // here we do await to get the actual data (await because it takes some time)
+                    console.log(data);
+                }
+                else{
+                    console.log("Error in posting");
+                }
+            }
+
+            async function PostNewUser() //function is async to anable use of await
+            {
+                // get values for new user
+                const User = {
+                    name : document.getElementById("NameForNewUser").value,
+                    email : document.getElementById("EmailForNewUser").value
+                }
+                document.getElementById("NameForNewUser").value = ""; //cleanUp
+                document.getElementById("EmailForNewUser").value = "";
+                
+                //send request and await for responce
+                //sending url AND some SETINGS
+                // good example - requests in POSTMAN
+                const responce = await fetch(usersUrl, {
+                    method : "post", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                    headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
+                    body: JSON.stringify(User) //convert user to json and send in rquest body
+                });
+
+                // responce does not contains info 
+                if(responce.ok)
+                {
+                    const data = await responce.json(); // here we do await to get the actual data (await because it takes some time)
+                    console.log(data);
+                }
+                else{
+                    console.log("Error in posting");
+                }
+            }
+
+            async function PrintUserToDos(id)
+            {
+                var placeOfToDos = document.getElementById("ListOfToDos");
+                const responce = await fetch(`${TodosUrl}${"?userId="}${id}`);
+                if(responce.ok) {
+                const todosdata = await responce.json();
+                todosdata.forEach(element => {
+                    //console.log(element.title);
+                    var newEL = document.createElement("li");
+                    newEL.innerHTML = element.title;
+                    placeOfToDos.append(newEL);
+                });
+                
+                }
+            }
+
+            function GetuserById()
+            {
+                var UserId = document.getElementById("userId").value;
+
+                const nameElem = document.getElementById("name");
+                const Email = document.getElementById("email");
+
+                fetch(usersUrl+`/${UserId}`).then(async result => // add user id to request string and wait for responce
+                {
+                    if(result.ok) // if responce is ok
+                    {
+                        const data = await result.json(); // await till json is extracted
+                        //console.log(data); // do stuff with data
+                        nameElem.value = data.name;
+                        Email.value = data.email;
+                        
+                        var allLis = document.getElementsByTagName("li");
+                            if(allLis.length != 0)
+                            {
+                                //console.log("detected: " + allLis.length + " elements");
+                                for(var i = allLis.length-1; i >=0 ; i--)
+                                {
+                                    allLis[i].remove();
+                                }
+                            }
+
+                        if(data.name[0] == "E")
+                        {
+                            PrintUserToDos(UserId);
+                        }
+                    }
+                    else{
+                        console.log("Error");
+                    }
+                });
+            }
+
+            function GetAll1()
+            {
+                // fetch(url).then((result) => console.log(result));
+
+                // fetch(url).then(result => result).then(data => 
+                // {
+                //     if(data.ok)
+                //     {
+                //         return data.json();
+                //     }
+                //     else{
+                //         console.log("Reqest denied");
+                //     }
+                // }).then(finalData =>
+                // {
+                //     console.log(finalData);
+                // });
+
+                //then 
+                fetch(usersUrl).then(data => 
+                {
+                    if(data.ok)
+                    {
+                        return data.json()
+                    }
+                    else{
+                        console.log("Reqest denied");
+                    }
+                }).then(finalData =>
+                {
+                    console.log(finalData);
+                });
+            }
+
+            //async await
+            async function GetAll2()
+            {
+                const responce = await fetch(usersUrl);
+                //console.log(responce);
+                if(responce.ok)
+                {
+                    const data = await responce.json();
+                    console.log(data);
+                    AddUsersToTable(data);   
+                }
+                else{
+                    console.log("Responce denied");
+                }
+            }
+
+            GetAll2();
+
+            function AddUsersToTable(data)
+            {
+                var placeToAdd = document.getElementById("AllusersTable");
+
+                data.forEach(obj => {
+                var newTR = document.createElement("tr");
+                var IdTd = document.createElement("td");
+                var NameTd = document.createElement("td");
+                var EmailTd = document.createElement("td");
+                IdTd.innerHTML = obj.id;
+                NameTd.innerHTML = obj.name;
+                EmailTd.innerHTML = obj.email;
+
+                newTR.append(IdTd);
+                newTR.append(NameTd);
+                newTR.append(EmailTd);
+                placeToAdd.append(newTR);
+                });
+            }
+        </script>
+    </body>
+</html>
