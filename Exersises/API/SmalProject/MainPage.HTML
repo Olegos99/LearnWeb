@@ -10,11 +10,16 @@
                 Film Editor Page
             </h1>
             <br><br>
-            <button onclick="CreateNew()" class="placeinmid">Create New Movie</button>
-            <br>
+            <button onclick="CreateNew()" class="glow-on-hover" type="button">Create New Movie</button>
+            <br><br>
+            <nav><button onclick="RefillTheTable(false)" id ="prev">Previous 10</button><button onclick="RefillTheTable(true)"  id ="next">Next 10</button></nav>
+            <br><br>
             <table id="MainTable">
                 <tr><th>Film Name</th><th>Film Poster</th><th>Edit</th><th>Delete</th></tr>
             </table>
+            <br><br>
+            <nav><button onclick="RefillTheTable(false)" id ="prev2">Previous 10</button><button onclick="RefillTheTable(true)"  id ="next2">Next 10</button></nav>
+            <br><br>
 
         </div>
         
@@ -22,6 +27,24 @@
         <script>
             console.log("You can see 'requests' in Aplication session storage");
             const filmsUrl = "https://api.tvmaze.com/shows";
+    
+            let FromFilmId = Number(0);
+            let TillFilmId = Number(10);
+
+            if(sessionStorage.getItem("FromFilmId"))
+            {
+                FromFilmId = Number(sessionStorage.getItem("FromFilmId"));
+                TillFilmId = Number(sessionStorage.getItem("TillFilmId"));
+            }
+            else{
+                sessionStorage.setItem("FromFilmId", Number(FromFilmId));
+                sessionStorage.setItem("TillFilmId", Number(TillFilmId));
+            }
+
+            const PrevButton = document.getElementById("prev");
+            const NextButton = document.getElementById("next");
+            const PrevButton2 = document.getElementById("prev2");
+            const NextButton2 = document.getElementById("next2");
 
             async function FillTheTable()
             {
@@ -30,13 +53,53 @@
                 if(films.ok)
                 {
                     const FilmsData = await films.json();
-                    for(i = 0; i < 10 ; i ++)
+                    for(i = FromFilmId; i < TillFilmId ; i ++)
                     {
                         CreateFilmTR(FilmsData[i].name, FilmsData[i].image.medium, i);
                     }
                 }
                 else
                 console.log("An Error oqured");
+                if(FromFilmId == 0)
+                {
+                    PrevButton.disabled = true;
+                    PrevButton2.disabled = true;
+                }
+                if(TillFilmId >= 239)
+                {
+                    NextButton.disabled = true;
+                    NextButton2.disabled = true;
+                }
+            }
+
+            function RefillTheTable(next)
+            {
+                var allFilmsTR = document.getElementsByClassName("FilmTR");
+                for (i = allFilmsTR.length-1; i >= 0; i--)
+                {
+                    allFilmsTR[i].remove();
+                }
+                if(next)
+                {
+                    PrevButton.disabled = false;
+                    PrevButton2.disabled = false;
+                    FromFilmId += 10;
+                    TillFilmId += 10;
+                }
+                else{
+                    NextButton.disabled = false;
+                    NextButton2.disabled = false;
+                    if(FromFilmId == 10)
+                    {
+                        PrevButton.disabled = true;
+                        PrevButton2.disabled = true;
+                    }
+                    FromFilmId -= 10;
+                    TillFilmId -= 10;
+                }
+                sessionStorage.setItem("FromFilmId", Number(FromFilmId));
+                sessionStorage.setItem("TillFilmId", Number(TillFilmId) );
+                FillTheTable();
             }
 
             function CreateFilmTR(FilmName, FilmPosterSrc, FilmId)
@@ -47,6 +110,7 @@
                 var movieImage = document.createElement("img");
 
                 NewTR.id = FilmId;
+                NewTR.className = "FilmTR";
 
                 NewTR.innerHTML=`
                 <td class="child name">${FilmName}</td>
