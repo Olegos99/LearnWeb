@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
     <body onload="FillTheTable()">
-        <h1>
-            Film Editor Page
-        </h1>
-        <button onclick="CreateNew()">Create New Movie</button>
-        <table id="MainTable">
-            <tr><th>Film Name</th><th>Film Poster</th><th>Edit</th><th>Delete</th></tr>
-        </table>
+        <div id="backgroundImage">
+            <h1 class="placeinmid">
+                Film Editor Page
+            </h1>
+            <br><br>
+            <button onclick="CreateNew()" class="placeinmid">Create New Movie</button>
+            <br>
+            <table id="MainTable">
+                <tr><th>Film Name</th><th>Film Poster</th><th>Edit</th><th>Delete</th></tr>
+            </table>
+
+        </div>
+        
 
         <script>
+            console.log("You can see 'requests' in Aplication session storage");
             const filmsUrl = "https://api.tvmaze.com/shows";
+
             async function FillTheTable()
             {
                 const films = await fetch(filmsUrl);
@@ -37,10 +49,10 @@
                 NewTR.id = FilmId;
 
                 NewTR.innerHTML=`
-                <td class="child">${FilmName}</td>
+                <td class="child name">${FilmName}</td>
                 <td class="child"><img src="${FilmPosterSrc}"></td>
-                <td class="child"><button onclick="Update(${FilmId})">Update</button></td>
-                <td class="child"><button onclick="Delete(${FilmId})">Delete</button></td>
+                <td class="child"><button onclick="Update(${FilmId})" class ="updateButton">Update</button></td>
+                <td class="child"><button onclick="Delete(${FilmId})" class ="deleteButton">Delete</button></td>
                 `;
                 placeToAdd.append(NewTR);
             }
@@ -54,14 +66,34 @@
                 window.location.href = '\EditFilmScreen.HTML';
             }
 
-            function Delete(id)
+            async function Delete(id)
             {
-                sessionStorage.setItem("DELITE film with id", id);
                 var parent = document.getElementById(id);
                 var children = parent.querySelectorAll('.child');
+                if(confirm(`You want to delete permanetly "${children[0].innerHTML}" film?`))
+                {
+                sessionStorage.setItem("DELITE film with id", id);
+
                 //request for deliting
-                alert(`You delited permanetly at film ${children[0].innerHTML}.`);
+                sessionStorage.setItem("Last fetch request", `Fetching with : ${filmsUrl}/${sessionStorage.getItem("DELITE film with id")} to make 'DELETE' request`);
+                //WITH REAL API IT SHOULD WORK (I WAS TOLD TO COMMENT THIS)
+
+                // const DeleteRequest = await fetch(`${filmsUrl}/${sessionStorage.getItem("DELITE film with id")}`, {
+                //     method : "delete", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                // });
+
+                // if(PostRequest.ok)
+                // {
+                //     console.log(PostRequest);
+                // }
+                // else
+                // console.log("Error in updating");
+
+                //WITH REAL API IT SHOULD WORK (I WAS TOLD TO COMMENT THIS)
+
+                }
             }
+
             function CreateNew()
             {
                 window.location.href = '\CreateNewMoviePage.HTML';

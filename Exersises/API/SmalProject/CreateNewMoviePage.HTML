@@ -1,16 +1,99 @@
 <html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
     <body>
-        <H1>Create New Film</H1>
+
+        <div id="backgroundImage">
+            <br><br>
+            <H1 class="placeinmid">Create New Film</H1>
+            <br><br>
+                <table  class="placeinmid">
+                    <tr>
+                        <td>Name:</td>
+                        <td><input type="text" id = "name" ></td>
+                    </tr>
+                    <tr>
+                        <td>Rating:</td>
+                        <td><input type="text" id = "Rating" ></td>
+                    </tr>
+                    <tr>
+                        <td>Type:</td>
+                        <td><input type="text" id = "Type" ></td>
+                    </tr>
+                    <tr>
+                        <td>Runtime:</td>
+                        <td><input type="text" id = "runtime" ></td>
+                    </tr>
+                    <tr>
+                        <td>Language:</td>
+                        <td><input type="text" id = "Language" ></td>
+                    </tr>
+
+                </table>
+                <br><br>
+                <button onclick="CreateNewMovie()" class="placeinmid">Create</button>
+                <br><br>
+        </div>
+
+            <!-- <div class="placeinmid">Name: <input type="text" id = "name" ></div>
+            <br><br>
+            <div class="placeinmid">Rating: <input type="text" id = "Rating" ></div>
+            <br><br>
+            <div class="placeinmid">Type: <input type="text" id = "Type" ></div>
+            <br><br>
+            <div class="placeinmid">Runtime: <input type="text" id = "runtime" ></div>
+            <br><br>
+            <div class="placeinmid">Language: <input type="text" id = "Language" ></div> -->
 
 
-
-
-        <button onclick="CreateNewMovie()">Create</button>
         <script>
-            function CreateNewMovie()
+            const filmsUrl = "https://api.tvmaze.com/shows";
+
+            const FilmNameText = document.getElementById("name");
+            const Rating = document.getElementById("Rating");
+            const Type = document.getElementById("Type");
+            const runtime = document.getElementById("runtime");
+            const Language = document.getElementById("Language");
+            const Genres = document.getElementById("genres");
+
+            async function CreateNewMovie()
             {
                 //request for adding new film (posting)
+                var EditedFilm ={
+                    name : FilmNameText.value,
+                    rating : {average : Rating.value},
+                    type : Type.value,
+                    runtime : runtime.value,
+                    language : Language.value
+                };
+                // EditedFilm.name = FilmNameText.value;
+                // EditedFilm.rating.average = Rating.value;
+                // EditedFilm.type = Type.value;
+                // EditedFilm.runtime = runtime.value;
+                // EditedFilm.language = Language.value;
 
+                console.log(`Fetching with : ${filmsUrl} to make 'POST' request with ${JSON.stringify(EditedFilm)} in a body`);
+
+                sessionStorage.setItem("Last fetch request",`Fetching with : ${filmsUrl} to make 'POST' request with ${JSON.stringify(EditedFilm)} in a body`);
+
+                //WITH REAL API IT SHOULD WORK (I WAS TOLD TO COMMENT THIS)
+
+                // const PostRequest = await fetch(`${filmsUrl}`, {
+                //     method : "post", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                //     headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
+                //     body: JSON.stringify(EditedFilm) //convert user to json and send in rquest body
+                // });
+
+                // if(PostRequest.ok)
+                // {
+                //     console.log(PostRequest);
+                // }
+                // else
+                // console.log("Error in updating");
+
+                //WITH REAL API IT SHOULD WORK (I WAS TOLD TO COMMENT THIS)
 
                 window.location.href = '\MainPage.HTML';
             }
