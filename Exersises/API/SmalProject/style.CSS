@@ -102,6 +102,20 @@ img{
     background-color: rgb(37, 138, 28);
     width: 75px;
 }
+
+#greetingMesage
+{
+    color: greenyellow;
+}
+
+.SubmitUpdateButton
+{
+    background-color: rgb(37, 138, 28);
+}
+.SubmitUpdateButton:hover
+{
+    background-color: rgb(14, 219, 14);
+}
 .updateButton:hover
 {
     background-color: rgb(14, 219, 14);

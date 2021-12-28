@@ -43,7 +43,7 @@
         Language: <input type="text" id = "Language"><br>
         Genres: <span id = "genres"></span><br><br> -->
 
-        <button onclick="SubmittChanges()" class="updateButton placeinmid">Save Changes</button>
+        <button onclick="SubmittChanges()" class="placeinmid SubmitUpdateButton">Save Changes</button>
         <br><br>
         </div>
 
@@ -98,20 +98,23 @@
                 sessionStorage.setItem("Last fetch request",`Fetching with : ${filmsUrl}/${sessionStorage.getItem("Edit film with id")} to make 'PUT' request with ${JSON.stringify(EditedFilm)} in a body`);
 
                 //WITH REAL API IT SHOULD WORK (I WAS TOLD TO COMMENT THIS)
+                try {
+                        const UpdateRequest = await fetch(`${filmsUrl}/${sessionStorage.getItem("Edit film with id")}`, {
+                        method : "put", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                        headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
+                        body: JSON.stringify(EditedFilm) //convert user to json and send in rquest body
+                    });
 
-                // const UpdateRequest = await fetch(`${filmsUrl}/${sessionStorage.getItem("Edit film with id")}`, {
-                //     method : "put", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
-                //     headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
-                //     body: JSON.stringify(EditedFilm) //convert user to json and send in rquest body
-                // });
-
-                // if(UpdateRequest.ok)
-                // {
-                //     console.log(UpdateRequest);
-                // }
-                // else
-                // console.log("Error in updating");
-
+                    if(UpdateRequest.ok)
+                    {
+                        console.log(UpdateRequest);
+                    }
+                    else
+                    console.log("Error in updating");
+                } catch (error) {
+                    console.log(error);
+                }
+                
                 //WITH REAL API IT SHOULD WORK (I WAS TOLD TO COMMENT THIS)
 
 

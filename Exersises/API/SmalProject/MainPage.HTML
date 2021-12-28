@@ -9,6 +9,8 @@
             <h1 class="placeinmid">
                 Film Editor Page
             </h1>
+            <br>
+            <span id = "greetingMesage"></span>
             <br><br>
             <button onclick="CreateNew()" class="glow-on-hover" type="button">Create New Movie</button>
             <br><br>
@@ -39,6 +41,12 @@
             else{
                 sessionStorage.setItem("FromFilmId", Number(FromFilmId));
                 sessionStorage.setItem("TillFilmId", Number(TillFilmId));
+            }
+
+            if(sessionStorage.getItem("Current Editor's Name"))
+            {
+                var placeofGreeting = document.getElementById("greetingMesage");
+                placeofGreeting.innerHTML = `Welcome back <br><b>${sessionStorage.getItem("Current Editor's Name")}<b>`;
             }
 
             const PrevButton = document.getElementById("prev");
@@ -135,26 +143,26 @@
                 var parent = document.getElementById(id);
                 var children = parent.querySelectorAll('.child');
                 if(confirm(`You want to delete permanetly "${children[0].innerHTML}" film?`))
-                {
-                sessionStorage.setItem("DELITE film with id", id);
+                    {
+                    sessionStorage.setItem("DELITE film with id", id);
 
-                //request for deliting
-                sessionStorage.setItem("Last fetch request", `Fetching with : ${filmsUrl}/${sessionStorage.getItem("DELITE film with id")} to make 'DELETE' request`);
-                //WITH REAL API IT SHOULD WORK (I WAS TOLD TO COMMENT THIS)
+                    //request for deliting
+                    sessionStorage.setItem("Last fetch request", `Fetching with : ${filmsUrl}/${sessionStorage.getItem("DELITE film with id")} to make 'DELETE' request`);
 
-                // const DeleteRequest = await fetch(`${filmsUrl}/${sessionStorage.getItem("DELITE film with id")}`, {
-                //     method : "delete", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
-                // });
+                    try {
+                            const DeleteRequest = await fetch(`${filmsUrl}/${sessionStorage.getItem("DELITE film with id")}`, {
+                            method : "delete", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                        });
 
-                // if(PostRequest.ok)
-                // {
-                //     console.log(PostRequest);
-                // }
-                // else
-                // console.log("Error in updating");
-
-                //WITH REAL API IT SHOULD WORK (I WAS TOLD TO COMMENT THIS)
-
+                        if(PostRequest.ok)
+                        {
+                            console.log(PostRequest);
+                        }
+                        else
+                        console.log("Error in updating");
+                    } catch (error) {
+                        console.log(error);
+                    }
                 }
             }
 

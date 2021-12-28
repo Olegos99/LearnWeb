@@ -79,19 +79,22 @@
                 sessionStorage.setItem("Last fetch request",`Fetching with : ${filmsUrl} to make 'POST' request with ${JSON.stringify(EditedFilm)} in a body`);
 
                 //WITH REAL API IT SHOULD WORK (I WAS TOLD TO COMMENT THIS)
+                try {
+                    const PostRequest = await fetch(`${filmsUrl}`, {
+                        method : "post", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                        headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
+                        body: JSON.stringify(EditedFilm) //convert user to json and send in rquest body
+                    });
 
-                // const PostRequest = await fetch(`${filmsUrl}`, {
-                //     method : "post", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
-                //     headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
-                //     body: JSON.stringify(EditedFilm) //convert user to json and send in rquest body
-                // });
-
-                // if(PostRequest.ok)
-                // {
-                //     console.log(PostRequest);
-                // }
-                // else
-                // console.log("Error in updating");
+                    if(PostRequest.ok)
+                    {
+                        console.log(PostRequest);
+                    }
+                    else
+                    console.log("Error in updating"); 
+                } catch (error) {
+                    console.log(error);
+                }
 
                 //WITH REAL API IT SHOULD WORK (I WAS TOLD TO COMMENT THIS)
 
