@@ -1,0 +1,23 @@
+[{
+    "name": "Yossi",
+    "age": 29,
+    "address": {
+        "city": "Tel Aviv",
+        "street": {
+            "name": "somestreet",
+            "number": "42"
+        }
+    }
+},
+{
+    "name": "Rami",
+    "age": 21,
+    "address": {
+        "city": "Hadera",
+        "street": {
+            "name": "HellStreet",
+            "number": "666"
+        }
+    }
+}
+]
