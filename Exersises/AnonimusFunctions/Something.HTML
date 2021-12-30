@@ -1,0 +1,32 @@
+<html>
+    <body>
+        <script>
+            var arr = [[1,2,3,11,2,3,4,12],[12,11,12,11,3,4,11]];
+                // var arr2 = [];
+                // arr.forEach(elem =>
+                // {
+                //     var arr1 = [];
+                //     elem.forEach(elem2 =>{
+                //         if(elem2 ==11 || elem2 == 12)
+                //         arr1.push(elem2);
+                //     })
+                //     arr2.push(arr1);
+                // })
+                // console.log(arr2);
+
+                var i =[];
+                i = arr.reduce((prev, current) =>
+                {
+                    prev.push(current.reduce((prev1,curr1) =>
+                    {
+                        if(curr1 == 11|| curr1 == 12)
+                        prev1.push(curr1);
+
+                        return prev1;
+                    }, []));
+                    return prev;
+                }, []);
+                console.log( i);
+        </script>
+    </body>
+</html>

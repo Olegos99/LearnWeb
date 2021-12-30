@@ -1,0 +1,20 @@
+{
+    "cars" : [
+        {
+            "model" : "BMW",
+            "color" : "Blue"
+        },
+        {
+            "model" : "Mazda",
+            "color" : "Red"
+        },
+        {
+            "model" : "KIA",
+            "color" : "Blue"
+        },
+        {
+            "model" : "Honday",
+            "color" : "Green"
+        }
+    ]
+}
