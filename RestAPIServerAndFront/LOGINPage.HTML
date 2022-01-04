@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
+<body onload="GetAll()">
+    <div id="backgroundImage">
+        <h1 class="placeinmid">
+            Log In to edit films:
+        </h1>
+        <br><br>
+        <table  class="placeinmid">
+            <tr>
+                <td>UserName:</td>
+                <td><input type="text" id = "name" ></td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td><input type="text" id = "email" ></td>
+            </tr>
+        </table>
+            <br><br>
+        <button onclick="ChekUser()" class="glow-on-hover" type="button">Enter</button>
+        <br><br>
+
+    </div>
+
+    <script>
+         const usersUrl = "https://jsonplaceholder.typicode.com/users";// using plasholder webservise to test requests
+        
+         let AllEditors = [];
+                async function GetAll()
+                {
+                    const responce = await fetch(usersUrl);
+                    //console.log(responce);
+                    if(responce.ok)
+                    {
+                        AllEditors = await responce.json();
+                        console.log("Each of them can edit films");
+                        console.log(AllEditors);
+                    }
+                    else{
+                        console.log("Responce denied");
+                    }
+                }
+
+            function ChekUser()
+            {
+                var username = document.getElementById("name").value;
+                var email = document.getElementById("email").value;
+
+                var UserExist = false;
+                var User;
+
+                AllEditors.forEach(editor => {
+                    if(editor.username == username && editor.email == email)
+                    {
+                        UserExist = true;
+                        User = editor;
+                    }
+                })
+                
+                if(UserExist)
+                {
+                    sessionStorage.setItem("Current Editor's Name", User.name);
+                    window.location.href = '\MainPage.HTML';
+                }
+            }
+    </script>
+</body>
+
+</html>

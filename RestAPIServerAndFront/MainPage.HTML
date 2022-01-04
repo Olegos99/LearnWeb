@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body onload="FillTheTable()">
+        <div id="backgroundImage">
+            <h1 class="placeinmid">
+                Film Editor Page
+            </h1>
+            <br>
+            <span id = "greetingMesage"></span>
+            <br><br>
+            <button onclick="CreateNew()" class="glow-on-hover" type="button">Create New Movie</button>
+            <br><br>
+            <nav><button onclick="RefillTheTable(false)" id ="prev">Previous 10</button><button onclick="RefillTheTable(true)"  id ="next">Next 10</button></nav>
+            <br><br>
+            <table id="MainTable">
+                <tr><th>Film Name</th><th>Film Poster</th><th>Edit</th><th>Delete</th></tr>
+            </table>
+            <br><br>
+            <nav><button onclick="RefillTheTable(false)" id ="prev2">Previous 10</button><button onclick="RefillTheTable(true)"  id ="next2">Next 10</button></nav>
+            <br><br>
+
+        </div>
+        
+
+        <script>
+            console.log("You can see 'requests' in Aplication session storage");
+            const filmsUrl = "https://api.tvmaze.com/shows";
+            const MyFilmURL = "http://localhost:8000/api/films/";
+    
+            let FromFilmId = Number(0);
+            let TillFilmId = Number(10);
+
+            if(sessionStorage.getItem("FromFilmId"))
+            {
+                FromFilmId = Number(sessionStorage.getItem("FromFilmId"));
+                TillFilmId = Number(sessionStorage.getItem("TillFilmId"));
+            }
+            else{
+                sessionStorage.setItem("FromFilmId", Number(FromFilmId));
+                sessionStorage.setItem("TillFilmId", Number(TillFilmId));
+            }
+
+            if(sessionStorage.getItem("Current Editor's Name"))
+            {
+                var placeofGreeting = document.getElementById("greetingMesage");
+                placeofGreeting.innerHTML = `Welcome back <br><b>${sessionStorage.getItem("Current Editor's Name")}<b>`;
+            }
+
+            const PrevButton = document.getElementById("prev");
+            const NextButton = document.getElementById("next");
+            const PrevButton2 = document.getElementById("prev2");
+            const NextButton2 = document.getElementById("next2");
+
+            async function FillTheTable()
+            {
+                const films = await fetch(MyFilmURL);
+
+                if(films.ok)
+                {
+                    const FilmsData = await films.json();
+                    console.log(FilmsData);
+                    for(i = FromFilmId; i < TillFilmId ; i ++)
+                    {
+                        CreateFilmTR(FilmsData[i].name, FilmsData[i].img, FilmsData[i]._id);
+                    }
+                }
+                else
+                console.log("An Error oqured");
+                if(FromFilmId == 0)
+                {
+                    PrevButton.disabled = true;
+                    PrevButton2.disabled = true;
+                }
+                if(TillFilmId >= 239)
+                {
+                    NextButton.disabled = true;
+                    NextButton2.disabled = true;
+                }
+            }
+
+            function RefillTheTable(next)
+            {
+                var allFilmsTR = document.getElementsByClassName("FilmTR");
+                for (i = allFilmsTR.length-1; i >= 0; i--)
+                {
+                    allFilmsTR[i].remove();
+                }
+                if(next)
+                {
+                    PrevButton.disabled = false;
+                    PrevButton2.disabled = false;
+                    FromFilmId += 10;
+                    TillFilmId += 10;
+                }
+                else{
+                    NextButton.disabled = false;
+                    NextButton2.disabled = false;
+                    if(FromFilmId == 10)
+                    {
+                        PrevButton.disabled = true;
+                        PrevButton2.disabled = true;
+                    }
+                    FromFilmId -= 10;
+                    TillFilmId -= 10;
+                }
+                sessionStorage.setItem("FromFilmId", Number(FromFilmId));
+                sessionStorage.setItem("TillFilmId", Number(TillFilmId) );
+                FillTheTable();
+            }
+
+            function CreateFilmTR(FilmName, FilmPosterSrc, FilmId)
+            {
+                var placeToAdd = document.getElementById("MainTable");
+                var NewTR = document.createElement("tr");
+                var movieName = document.createElement("h3");
+                var movieImage = document.createElement("img");
+
+                NewTR.id = FilmId;
+                NewTR.className = "FilmTR";
+
+                NewTR.innerHTML=`
+                <td class="child name">${FilmName}</td>
+                <td class="child"><img src="${FilmPosterSrc}"></td>
+                <td class="child"><button onclick="Update(${FilmId})" class ="updateButton">Update</button></td>
+                <td class="child"><button onclick="Delete(${FilmId})" class ="deleteButton">Delete</button></td>
+                `;
+                placeToAdd.append(NewTR);
+            }
+
+            function Update(id)
+            {
+                var parent = document.getElementById(id);
+                var children = parent.querySelectorAll('.child');
+                sessionStorage.setItem("Edit film with id", id);
+                sessionStorage.setItem("Edit film with name", children[0].innerHTML);
+                window.location.href = '\EditFilmScreen.HTML';
+            }
+
+            async function Delete(id)
+            {
+                var parent = document.getElementById(id);
+                var children = parent.querySelectorAll('.child');
+                if(confirm(`You want to delete permanetly "${children[0].innerHTML}" film?`))
+                    {
+                    sessionStorage.setItem("DELITE film with id", id);
+
+                    //request for deliting
+                    sessionStorage.setItem("Last fetch request", `Fetching with : ${MyFilmURL}/${sessionStorage.getItem("DELITE film with id")} to make 'DELETE' request`);
+
+                    try {
+                            const DeleteRequest = await fetch(`${MyFilmURL}/${sessionStorage.getItem("DELITE film with id")}`, {
+                            method : "delete", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                        });
+
+                        if(PostRequest.ok)
+                        {
+                            console.log(PostRequest);
+                        }
+                        else
+                        console.log("Error in updating");
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            }
+
+            function CreateNew()
+            {
+                window.location.href = '\CreateNewMoviePage.HTML';
+            }
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,110 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+
+        <div id="backgroundImage">
+            <br><br>
+            <H1 class="placeinmid">Create New Film</H1>
+            <br><br>
+                <table  class="placeinmid">
+                    <tr>
+                        <td>Name:</td>
+                        <td><input type="text" id = "name" ></td>
+                    </tr>
+                    <tr>
+                        <td>Rating:</td>
+                        <td><input type="text" id = "Rating" ></td>
+                    </tr>
+                    <tr>
+                        <td>Type:</td>
+                        <td><input type="text" id = "Type" ></td>
+                    </tr>
+                    <tr>
+                        <td>Runtime:</td>
+                        <td><input type="text" id = "runtime" ></td>
+                    </tr>
+                    <tr>
+                        <td>Language:</td>
+                        <td><input type="text" id = "Language" ></td>
+                    </tr>
+                    <tr>
+                        <td>Director:</td>
+                        <td><input type="text" id = "Director" ></td>
+                    </tr>
+                    <tr>
+                        <td>PremierDate:</td>
+                        <td><input type="text" id = "PremierDate" ></td>
+                    </tr>
+
+                </table>
+                <br><br>
+                <button onclick="CreateNewMovie()" class="glow-on-hover" type="button">Create</button>
+                <br><br>
+        </div>
+
+            <!-- <div class="placeinmid">Name: <input type="text" id = "name" ></div>
+            <br><br>
+            <div class="placeinmid">Rating: <input type="text" id = "Rating" ></div>
+            <br><br>
+            <div class="placeinmid">Type: <input type="text" id = "Type" ></div>
+            <br><br>
+            <div class="placeinmid">Runtime: <input type="text" id = "runtime" ></div>
+            <br><br>
+            <div class="placeinmid">Language: <input type="text" id = "Language" ></div> -->
+
+
+        <script>
+            const filmsUrl = "https://api.tvmaze.com/shows";
+            const MyFilmURL = "http://localhost:8000/api/films";
+
+            const FilmNameText = document.getElementById("name");
+            const Rating = document.getElementById("Rating");
+            const Type = document.getElementById("Type");
+            const runtime = document.getElementById("runtime");
+            const Language = document.getElementById("Language");
+            const Director = document.getElementById("Director");
+            const PremierDate = document.getElementById("PremierDate");
+            const Genres = document.getElementById("genres");
+
+            async function CreateNewMovie()
+            {
+                //request for adding new film (posting)
+                var EditedFilm ={
+                    name : FilmNameText.value,
+                    director : Director.value, 
+                    premieredDate: PremierDate.value,
+                    rating : Rating.value,
+                    type : Type.value,
+                    runtime : runtime.value,
+                    language : Language.value
+                };
+
+                console.log(`Fetching with : ${MyFilmURL} to make 'POST' request with ${JSON.stringify(EditedFilm)} in a body`);
+
+                sessionStorage.setItem("Last fetch request",`Fetching with : ${MyFilmURL} to make 'POST' request with ${JSON.stringify(EditedFilm)} in a body`);
+
+                    try {
+                    const PostRequest = await fetch(`${MyFilmURL}`, {
+                        method : "post", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                        headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
+                        body: JSON.stringify(EditedFilm) //convert user to json and send in rquest body
+                    });
+
+                    if(PostRequest.ok)
+                    {
+                        console.log(PostRequest);
+                    }
+                    else
+                    console.log("Error in updating"); 
+                } catch (error) {
+                    console.log(error);
+                }
+
+                window.location.href = '\MainPage.HTML';
+            }
+        </script>
+    </body>
+</html>

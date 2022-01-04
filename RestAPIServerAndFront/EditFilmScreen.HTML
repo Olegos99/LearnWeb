@@ -1,0 +1,137 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body onload="setCurrentFilmData()">
+        <div id="backgroundImage">
+            <br><br>
+        <H1 id = "Greeting text" class="placeinmid"></H1>
+        <br><br>
+        <table  class="placeinmid">
+            <tr>
+                <td>Name:</td>
+                <td><input type="text" id = "name" ></td>
+            </tr>
+            <tr>
+                <td>Rating:</td>
+                <td><input type="text" id = "Rating" ></td>
+            </tr>
+            <tr>
+                <td>Type:</td>
+                <td><input type="text" id = "Type" ></td>
+            </tr>
+            <tr>
+                <td>Runtime:</td>
+                <td><input type="text" id = "runtime" ></td>
+            </tr>
+            <tr>
+                <td>Language:</td>
+                <td><input type="text" id = "Language" ></td>
+            </tr>
+            <tr>
+                <td>Director:</td>
+                <td><input type="text" id = "Director" ></td>
+            </tr>
+            <tr>
+                <td>PremierDate:</td>
+                <td><input type="text" id = "PremierDate" ></td>
+            </tr>
+            <tr>
+                <td>Genres:</td>
+                <td><span id = "genres"></span></td>
+            </tr>
+
+
+        </table>
+        <br><br>
+        <!-- Name: <input type="text" id = "name"><br>
+        Rating: <input type="text" id = "Rating"><br>
+        Type: <input type="text" id = "Type"><br>
+        Runtime: <input type="text" id = "runtime"><br>
+        Language: <input type="text" id = "Language"><br>
+        Genres: <span id = "genres"></span><br><br> -->
+
+        <button onclick="SubmittChanges()" class="placeinmid SubmitUpdateButton">Save Changes</button>
+        <br><br>
+        </div>
+
+        <script>
+            const filmsUrl = "https://api.tvmaze.com/shows";
+            const MyFilmURL = "http://localhost:8000/api/films/";
+
+            const FilmNameText = document.getElementById("name");
+            const Rating = document.getElementById("Rating");
+            const Type = document.getElementById("Type");
+            const runtime = document.getElementById("runtime");
+            const Language = document.getElementById("Language");
+            const Director = document.getElementById("Director");
+            const PremierDate = document.getElementById("PremierDate");
+            const Genres = document.getElementById("genres");
+
+            let CurrentUpdatingFilm = [];
+
+            async function setCurrentFilmData()
+            {
+                document.getElementById("Greeting text").innerHTML = `Edition of "${sessionStorage.getItem("Edit film with name")}" film`;
+
+                const films = await fetch(MyFilmURL);
+
+                if(films.ok)
+                {
+                    const FilmsData = await films.json();
+                    CurrentUpdatingFilm = FilmsData[sessionStorage.getItem("Edit film with id")];
+
+                    FilmNameText.value = CurrentUpdatingFilm.name;
+                    Rating.value = CurrentUpdatingFilm.rating.average;
+                    Type.value = CurrentUpdatingFilm.type;
+                    runtime.value = CurrentUpdatingFilm.runtime;
+                    Language.value = CurrentUpdatingFilm.language;
+                    Director.value = CurrentUpdatingFilm.Director;
+                    PremierDate.value = CurrentUpdatingFilm.PremierDate;
+                    Genres.innerHTML = CurrentUpdatingFilm.genres;
+                    console.log(CurrentUpdatingFilm);
+                }
+                else
+                console.log("An Error oqured");
+            }
+
+
+            async function SubmittChanges()
+            {
+                //request for editing film (put)
+                var EditedFilm = CurrentUpdatingFilm;
+                EditedFilm.name = FilmNameText.value;
+                EditedFilm.rating.average = Rating.value;
+                EditedFilm.type = Type.value;
+                EditedFilm.runtime = runtime.value;
+                EditedFilm.language = Language.value;
+                EditedFilm.PremierDate = PremierDate.value;
+                EditedFilm.Director = Director.value;
+
+                console.log(`Fetching with : ${MyFilmURL}/${sessionStorage.getItem("Edit film with id")} to make 'PUT' request with ${JSON.stringify(EditedFilm)} in a body`);
+
+                sessionStorage.setItem("Last fetch request",`Fetching with : ${MyFilmURL}/${sessionStorage.getItem("Edit film with id")} to make 'PUT' request with ${JSON.stringify(EditedFilm)} in a body`);
+
+                try {
+                        const UpdateRequest = await fetch(`${MyFilmURL}/${sessionStorage.getItem("Edit film with id")}`, {
+                        method : "put", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                        headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
+                        body: JSON.stringify(EditedFilm) //convert user to json and send in rquest body
+                    });
+
+                    if(UpdateRequest.ok)
+                    {
+                        console.log(UpdateRequest);
+                    }
+                    else
+                    console.log("Error in updating");
+                } catch (error) {
+                    console.log(error);
+                }
+
+                window.location.href = '\MainPage.HTML';
+            }
+        </script>
+    </body>
+</html>
