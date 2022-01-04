@@ -34,8 +34,12 @@
                 <td><input type="text" id = "Director" ></td>
             </tr>
             <tr>
-                <td>PremierDate:</td>
+                <td>Premier Date:</td>
                 <td><input type="text" id = "PremierDate" ></td>
+            </tr>
+            <tr>
+                <td>Poster Image:</td>
+                <td><input type="text" id = "PosterImage" ></td>
             </tr>
             <tr>
                 <td>Genres:</td>
@@ -58,7 +62,7 @@
 
         <script>
             const filmsUrl = "https://api.tvmaze.com/shows";
-            const MyFilmURL = "http://localhost:8000/api/films/";
+            const MyFilmURL = "http://localhost:8000/api/films";
 
             const FilmNameText = document.getElementById("name");
             const Rating = document.getElementById("Rating");
@@ -67,30 +71,33 @@
             const Language = document.getElementById("Language");
             const Director = document.getElementById("Director");
             const PremierDate = document.getElementById("PremierDate");
+            const PosterImage = document.getElementById("PosterImage");
             const Genres = document.getElementById("genres");
 
-            let CurrentUpdatingFilm = [];
+            let CurrentUpdatingFilm;
 
             async function setCurrentFilmData()
             {
                 document.getElementById("Greeting text").innerHTML = `Edition of "${sessionStorage.getItem("Edit film with name")}" film`;
 
-                const films = await fetch(MyFilmURL);
+                const film = await fetch(`${MyFilmURL}/${sessionStorage.getItem("Edit film with id")}`);
 
-                if(films.ok)
+                if(film.ok)
                 {
-                    const FilmsData = await films.json();
-                    CurrentUpdatingFilm = FilmsData[sessionStorage.getItem("Edit film with id")];
+                    const FilmsData = await film.json();
+                    //CurrentUpdatingFilm = FilmsData[sessionStorage.getItem("Edit film with id")];
+                    CurrentUpdatingFilm = FilmsData;
 
                     FilmNameText.value = CurrentUpdatingFilm.name;
-                    Rating.value = CurrentUpdatingFilm.rating.average;
+                    Rating.value = CurrentUpdatingFilm.rating;
                     Type.value = CurrentUpdatingFilm.type;
                     runtime.value = CurrentUpdatingFilm.runtime;
                     Language.value = CurrentUpdatingFilm.language;
-                    Director.value = CurrentUpdatingFilm.Director;
-                    PremierDate.value = CurrentUpdatingFilm.PremierDate;
+                    Director.value = CurrentUpdatingFilm.director;
+                    PremierDate.value = CurrentUpdatingFilm.premieredDate;
+                    PosterImage.value = CurrentUpdatingFilm.img;
                     Genres.innerHTML = CurrentUpdatingFilm.genres;
-                    console.log(CurrentUpdatingFilm);
+                    console.log(FilmsData);
                 }
                 else
                 console.log("An Error oqured");
@@ -108,6 +115,7 @@
                 EditedFilm.language = Language.value;
                 EditedFilm.PremierDate = PremierDate.value;
                 EditedFilm.Director = Director.value;
+                EditedFilm.img = PosterImage.value;
 
                 console.log(`Fetching with : ${MyFilmURL}/${sessionStorage.getItem("Edit film with id")} to make 'PUT' request with ${JSON.stringify(EditedFilm)} in a body`);
 

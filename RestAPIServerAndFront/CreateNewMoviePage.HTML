@@ -38,6 +38,10 @@
                         <td>PremierDate:</td>
                         <td><input type="text" id = "PremierDate" ></td>
                     </tr>
+                    <tr>
+                        <td>Poster:</td>
+                        <td><input type="text" id = "Poster" ></td>
+                    </tr>
 
                 </table>
                 <br><br>
@@ -67,6 +71,7 @@
             const Language = document.getElementById("Language");
             const Director = document.getElementById("Director");
             const PremierDate = document.getElementById("PremierDate");
+            const Poster = document.getElementById("Poster");
             const Genres = document.getElementById("genres");
 
             async function CreateNewMovie()
@@ -79,7 +84,8 @@
                     rating : Rating.value,
                     type : Type.value,
                     runtime : runtime.value,
-                    language : Language.value
+                    language : Language.value,
+                    img : Poster.value
                 };
 
                 console.log(`Fetching with : ${MyFilmURL} to make 'POST' request with ${JSON.stringify(EditedFilm)} in a body`);

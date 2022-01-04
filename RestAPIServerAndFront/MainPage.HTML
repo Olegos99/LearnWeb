@@ -14,13 +14,13 @@
             <br><br>
             <button onclick="CreateNew()" class="glow-on-hover" type="button">Create New Movie</button>
             <br><br>
-            <nav><button onclick="RefillTheTable(false)" id ="prev">Previous 10</button><button onclick="RefillTheTable(true)"  id ="next">Next 10</button></nav>
+            <nav id = "NextPrevNAV1" class=""><button onclick="RefillTheTable(false)" id ="prev">Previous 10</button><button onclick="RefillTheTable(true)"  id ="next">Next 10</button></nav>
             <br><br>
             <table id="MainTable">
                 <tr><th>Film Name</th><th>Film Poster</th><th>Edit</th><th>Delete</th></tr>
             </table>
             <br><br>
-            <nav><button onclick="RefillTheTable(false)" id ="prev2">Previous 10</button><button onclick="RefillTheTable(true)"  id ="next2">Next 10</button></nav>
+            <nav id = "NextPrevNAV2" class=""><button onclick="RefillTheTable(false)" id ="prev2">Previous 10</button><button onclick="RefillTheTable(true)"  id ="next2">Next 10</button></nav>
             <br><br>
 
         </div>
@@ -29,7 +29,7 @@
         <script>
             console.log("You can see 'requests' in Aplication session storage");
             const filmsUrl = "https://api.tvmaze.com/shows";
-            const MyFilmURL = "http://localhost:8000/api/films/";
+            const MyFilmURL = "http://localhost:8000/api/films";
     
             let FromFilmId = Number(0);
             let TillFilmId = Number(10);
@@ -55,6 +55,11 @@
             const PrevButton2 = document.getElementById("prev2");
             const NextButton2 = document.getElementById("next2");
 
+            const NextPrevNav1 = document.getElementById("NextPrevNAV1");
+            const NextPrevNav2 = document.getElementById("NextPrevNAV2");
+            
+            let CurrentNumberOfFilmsIs = 0;
+
             async function FillTheTable()
             {
                 const films = await fetch(MyFilmURL);
@@ -63,9 +68,21 @@
                 {
                     const FilmsData = await films.json();
                     console.log(FilmsData);
-                    for(i = FromFilmId; i < TillFilmId ; i ++)
+
+                    CurrentNumberOfFilmsIs = FilmsData.length;
+
+                    for(let i = FromFilmId; i < (TillFilmId > FilmsData.length ? FilmsData.length : TillFilmId) ; i ++)
                     {
                         CreateFilmTR(FilmsData[i].name, FilmsData[i].img, FilmsData[i]._id);
+                    }
+                    if(FilmsData.length <= 10)
+                    {
+                        NextPrevNav1.className += "hidden";
+                        NextPrevNav2.className += "hidden";
+                    }
+                    else{
+                        NextPrevNav2.className -= "hidden";
+                        NextPrevNav2.className -= "hidden";
                     }
                 }
                 else
@@ -75,7 +92,7 @@
                     PrevButton.disabled = true;
                     PrevButton2.disabled = true;
                 }
-                if(TillFilmId >= 239)
+                if(TillFilmId >= CurrentNumberOfFilmsIs)
                 {
                     NextButton.disabled = true;
                     NextButton2.disabled = true;
@@ -118,21 +135,24 @@
                 var NewTR = document.createElement("tr");
                 var movieName = document.createElement("h3");
                 var movieImage = document.createElement("img");
-
+                //console.log(String(FilmId));
+                //const tryNew = Number(FilmId);
+                //debugger;
                 NewTR.id = FilmId;
                 NewTR.className = "FilmTR";
 
                 NewTR.innerHTML=`
                 <td class="child name">${FilmName}</td>
                 <td class="child"><img src="${FilmPosterSrc}"></td>
-                <td class="child"><button onclick="Update(${FilmId})" class ="updateButton">Update</button></td>
-                <td class="child"><button onclick="Delete(${FilmId})" class ="deleteButton">Delete</button></td>
+                <td class="child"><button id="${FilmId}" onclick="Update(id)" class="updateButton">Update</button></td>
+                <td class="child"><button id="${FilmId}" onclick="Delete(id)" class="deleteButton">Delete</button></td>
                 `;
                 placeToAdd.append(NewTR);
             }
 
             function Update(id)
             {
+                console.log(`update - ${id}`);
                 var parent = document.getElementById(id);
                 var children = parent.querySelectorAll('.child');
                 sessionStorage.setItem("Edit film with id", id);
@@ -142,6 +162,7 @@
 
             async function Delete(id)
             {
+                console.log(`delete - ${id}`);
                 var parent = document.getElementById(id);
                 var children = parent.querySelectorAll('.child');
                 if(confirm(`You want to delete permanetly "${children[0].innerHTML}" film?`))
@@ -156,9 +177,10 @@
                             method : "delete", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
                         });
 
-                        if(PostRequest.ok)
+                        if(DeleteRequest.ok)
                         {
-                            console.log(PostRequest);
+                            console.log(DeleteRequest);
+                            window.location.href = '\MainPage.HTML';
                         }
                         else
                         console.log("Error in updating");

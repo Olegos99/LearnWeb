@@ -51,6 +51,11 @@ nav{
     margin: auto;
 }
 
+.hidden 
+{
+    display: none;
+}
+
 #MainTable
 {
     text-align: center;

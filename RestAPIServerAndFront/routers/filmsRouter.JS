@@ -5,12 +5,20 @@ const Router = express.Router();
 
 Router.get('/',async (req,res) => {
     try {
-        const cars = await FilmsBLL.GetAllFilms();
-        res.send(cars);
+        const Films = await FilmsBLL.GetAllFilms();
+        res.send(Films);
     } catch (error) {
         res.send(error);
     }
+});
 
+Router.get('/:id',async (req,res) => {
+    try {
+        const Films = await FilmsBLL.FindFilmByID(req.params.id);
+        res.send(Films);
+    } catch (error) {
+        res.send(error);
+    }
 });
 
 Router.post('/', async (req, res) => 
