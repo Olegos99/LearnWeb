@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body onload="setCurrentFilmData()">
+        <div id="backgroundImage">
+                <br><br>
+            <H1 id = "Greeting text" class="placeinmid"></H1>
+            <br><br>
+            <table  class="placeinmid">
+                <tr>
+                    <td>Model:</td>
+                    <td><input type="text" id = "model" required></td>
+                </tr>
+                <tr>
+                    <td>Color:</td>
+                    <td><input type="text" id = "color" required></td>
+                </tr>
+                <tr>
+                    <td>Wheels:</td>
+                    <td><input type="text" id = "wheels" ></td>
+                </tr>
+                <tr>
+                    <td>Picture:</td>
+                    <td><input type="text" id = "img" ></td>
+                </tr>
+                <tr>
+                    <td>Year of Production:</td>
+                    <td><input type="text" id = "productionyear" ></td>
+                </tr>
+                <tr>
+                    <td>Cost:</td>
+                    <td><input type="text" id = "cost" ></td>
+                </tr>
+
+
+            </table>
+            <br><br>
+            <!-- Name: <input type="text" id = "name"><br>
+            Rating: <input type="text" id = "Rating"><br>
+            Type: <input type="text" id = "Type"><br>
+            Runtime: <input type="text" id = "runtime"><br>
+            Language: <input type="text" id = "Language"><br>
+            Genres: <span id = "genres"></span><br><br> -->
+
+            <button onclick="SubmittChanges()" class="placeinmid SubmitUpdateButton">Save Changes</button>
+            <br><br>
+        </div>
+
+        <script>
+           const MyCarsURL = "http://localhost:8000/api/cars";
+
+            const model = document.getElementById("model");
+            const color = document.getElementById("color");
+            const wheels = document.getElementById("wheels");
+            const img = document.getElementById("img");
+            const productionyear = document.getElementById("productionyear");
+            const cost = document.getElementById("cost");
+
+            let CurrentUpdatingCar;
+
+            async function setCurrentFilmData()
+            {
+                document.getElementById("Greeting text").innerHTML = `Edition of "${sessionStorage.getItem("Edit item with name")}" car`;
+
+                const film = await fetch(`${MyCarsURL}/${sessionStorage.getItem("Edit item with id")}`);
+
+                if(film.ok)
+                {
+                    const CarsData = await film.json();
+                    //CurrentUpdatingFilm = FilmsData[sessionStorage.getItem("Edit film with id")];
+                    CurrentUpdatingCar = CarsData;
+
+                    model.value = CurrentUpdatingCar.model;
+                    color.value = CurrentUpdatingCar.color;
+                    wheels.value = CurrentUpdatingCar.wheels;
+                    img.value = CurrentUpdatingCar.img;
+                    productionyear.value = CurrentUpdatingCar.productionyear;
+                    cost.value = CurrentUpdatingCar.cost;
+                    console.log(CarsData);
+                }
+                else
+                console.log("An Error oqured");
+            }
+
+
+            async function SubmittChanges()
+            {
+
+                if(model.value != undefined && model.value !="" && color.value != undefined && color.value != "")
+                {
+                    console.log(model.value + " - model.value");
+                    console.log(color.value + " - color.value");
+
+                    var EditedCar = {
+                    model : model.value,
+                    color : color.value,
+                    wheels : wheels.value,
+                    img : img.value,
+                    productionyear : productionyear.value,
+                    cost : cost.value
+                    }
+
+                    console.log(`Fetching with : ${MyCarsURL}/${sessionStorage.getItem("Edit item with id")} to make 'PUT' request with ${JSON.stringify(EditedCar)} in a body`);
+
+                    sessionStorage.setItem("Last fetch request",`Fetching with : ${MyCarsURL}/${sessionStorage.getItem("Edit item with id")} to make 'PUT' request with ${JSON.stringify(EditedCar)} in a body`);
+
+                    try {
+                            const UpdateRequest = await fetch(`${MyCarsURL}/${sessionStorage.getItem("Edit item with id")}`, {
+                            method : "put", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                            headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
+                            body: JSON.stringify(EditedCar) //convert user to json and send in rquest body
+                        });
+
+                        if(UpdateRequest.ok)
+                        {
+                            console.log(UpdateRequest);
+                        }
+                        else
+                        console.log("Error in updating");
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                    window.location.href = '\MainPage.HTML';
+                }
+                else
+                {
+                    alert("Car should have Model and Color fields filled!")
+                }
+
+            }
+        </script>
+    </body>
+</html>
