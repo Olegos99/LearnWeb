@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body onload="FillTheTable()">
+        <div id="backgroundImage">
+            <h1 class="placeinmid">
+                Students managment
+            </h1>
+            <br>
+            <span id = "greetingMesage"></span>
+            <br><br>
+            <button onclick="CreateNew()" class="glow-on-hover" type="button">Create New Car</button>
+            <br><br>
+            <nav id = "NextPrevNAV1" class=""><button onclick="RefillTheTable(false)" id ="prev">Previous 10</button><button onclick="RefillTheTable(true)"  id ="next">Next 10</button></nav>
+            <br><br>
+            <table id="MainTable">
+                <tr><th>Full Name</th><th>Faculty</th><th>Grades</th><th>Edit</th><th>Delete</th></tr>
+            </table>
+            <br><br>
+            <nav id = "NextPrevNAV2" class=""><button onclick="RefillTheTable(false)" id ="prev2">Previous 10</button><button onclick="RefillTheTable(true)"  id ="next2">Next 10</button></nav>
+            <br><br>
+
+
+
+        </div>
+        
+
+        <script>
+            console.log("You can see 'requests' in Aplication session storage");
+            const MyItemsURL = "http://localhost:8000/api/students";
+
+            const UpdatingPagePath = '\StudentEditionPage.HTML';
+            const GradesPagePath = '\GradesEditionPage.HTML';
+            const ThisPage = '\MainPage.HTML';
+            const ItemCreationPath = '\CreationPage.HTML';
+
+            let NumOfItemsToShow = 10;
+    
+            let FromItemId = Number(0);
+            let TillItemId = Number(NumOfItemsToShow);
+
+            if(sessionStorage.getItem("FromItemId"))
+            {
+                FromItemId = Number(sessionStorage.getItem("FromItemId"));
+                TillItemId = Number(sessionStorage.getItem("TillItemId"));
+            }
+            else{
+                sessionStorage.setItem("FromItemId", Number(FromItemId));
+                sessionStorage.setItem("TillItemId", Number(TillItemId));
+            }
+
+            if(sessionStorage.getItem("Current Editor's Name"))
+            {
+                var placeofGreeting = document.getElementById("greetingMesage");
+                placeofGreeting.innerHTML = `Welcome back <br><b>${sessionStorage.getItem("Current Editor's Name")}<b>`;
+            }
+
+            const PrevButton = document.getElementById("prev");
+            const NextButton = document.getElementById("next");
+            const PrevButton2 = document.getElementById("prev2");
+            const NextButton2 = document.getElementById("next2");
+
+            const NextPrevNav1 = document.getElementById("NextPrevNAV1");
+            const NextPrevNav2 = document.getElementById("NextPrevNAV2");
+            
+            let CurrentNumberOfItemsIs = 0;
+
+            async function FillTheTable()
+            {
+                const Students = await fetch(MyItemsURL);
+
+                if(Students.ok)
+                {
+                    const ItemsData = await Students.json();
+                    console.log(ItemsData);
+
+                    CurrentNumberOfFilmsIs = ItemsData.length;
+                    if(Number(FromItemId) > ItemsData.length - 1) // in case of deleting item and reloading page if it was last object on page return to preveous page
+                    {
+                        console.log("happend");
+                        FromItemId -= Number(NumOfItemsToShow);
+                        TillItemId -= Number(NumOfItemsToShow);
+                        sessionStorage.setItem("FromItemId", Number(FromItemId));
+                        sessionStorage.setItem("TillItemId", Number(TillItemId) );
+                    }
+
+                    for(let i = FromItemId; i < (TillItemId > ItemsData.length ? ItemsData.length : TillItemId) ; i ++)
+                    {
+                        //CreateItemTR(ItemsData[i].name, ItemsData[i].img, ItemsData[i]._id);
+                        CreateItemTR(ItemsData[i].FullName, ItemsData[i].Faculty, ItemsData[i]._id);
+                    }
+                    if(ItemsData.length <= NumOfItemsToShow)
+                    {
+                        NextPrevNav1.className += "hidden";
+                        NextPrevNav2.className += "hidden";
+                    }
+                    else{
+                        NextPrevNav2.className -= "hidden";
+                        NextPrevNav2.className -= "hidden";
+                    }
+                }
+                else
+                console.log("An Error oqured");
+                if(FromItemId == 0)
+                {
+                    PrevButton.disabled = true;
+                    PrevButton2.disabled = true;
+                }
+                if(TillItemId >= CurrentNumberOfFilmsIs)
+                {
+                    NextButton.disabled = true;
+                    NextButton2.disabled = true;
+                }
+            }
+
+            function RefillTheTable(next)
+            {
+                var allFilmsTR = document.getElementsByClassName("ItemTR");
+                for (i = allFilmsTR.length-1; i >= 0; i--)
+                {
+                    allFilmsTR[i].remove();
+                }
+                if(next)
+                {
+                    PrevButton.disabled = false;
+                    PrevButton2.disabled = false;
+                    FromItemId += NumOfItemsToShow;
+                    TillItemId += NumOfItemsToShow;
+                }
+                else{
+                    NextButton.disabled = false;
+                    NextButton2.disabled = false;
+                    if(FromItemId == NumOfItemsToShow)
+                    {
+                        PrevButton.disabled = true;
+                        PrevButton2.disabled = true;
+                    }
+                    FromItemId -= NumOfItemsToShow;
+                    TillItemId -= NumOfItemsToShow;
+                }
+                sessionStorage.setItem("FromItemId", Number(FromItemId));
+                sessionStorage.setItem("TillItemId", Number(TillItemId) );
+                FillTheTable();
+            }
+
+            function CreateItemTR(FullName, faculty, id)
+            {
+                var placeToAdd = document.getElementById("MainTable");
+                var NewTR = document.createElement("tr");
+                // var ItemName = document.createElement("h3");
+                // var ItemImage = document.createElement("img");
+                //console.log(String(FilmId));
+                //const tryNew = Number(FilmId);
+                //debugger;
+                NewTR.id = id;
+                NewTR.className = "ItemTR";
+
+                NewTR.innerHTML=`
+                <td class="child name">${FullName}</td>
+                <td class "child"> ${faculty}</td>
+                <td class="child"><button id="${id}" onclick="Update(id)" class="OpenLinkToGrades">Grades</button></td>
+                <td class="child"><button id="${id}" onclick="Update(id)" class="updateButton">Update</button></td>
+                <td class="child"><button id="${id}" onclick="Delete(id)" class="deleteButton">Delete</button></td>
+                `;
+                placeToAdd.append(NewTR);
+            }
+
+            function Update(id)
+            {
+                console.log(`update - ${id}`);
+                var parent = document.getElementById(id);
+                var children = parent.querySelectorAll('.child');
+                sessionStorage.setItem("Edit item with id", id);
+                sessionStorage.setItem("Edit item with name", children[0].innerHTML);
+                window.location.href = UpdatingPagePath;
+            }
+
+            async function Delete(id)
+            {
+                console.log(`delete - ${id}`);
+                var parent = document.getElementById(id);
+                var children = parent.querySelectorAll('.child');
+                if(confirm(`You want to delete permanetly "${children[0].innerHTML}" item?`))
+                    {
+                    sessionStorage.setItem("DELITE item with id", id);
+
+                    //request for deliting
+                    sessionStorage.setItem("Last fetch request", `Fetching with : ${MyItemsURL}/${sessionStorage.getItem("DELITE item with id")} to make 'DELETE' request`);
+
+                    try {
+                            const DeleteRequest = await fetch(`${MyItemsURL}/${sessionStorage.getItem("DELITE item with id")}`, {
+                            method : "delete", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                        });
+
+                        if(DeleteRequest.ok)
+                        {
+                            console.log(DeleteRequest);
+                            window.location.href = ThisPage;
+                        }
+                        else
+                        console.log("Error in Deletion");
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            }
+
+            function CreateNew()
+            {
+                window.location.href = ItemCreationPath;
+            }
+        </script>
+
+    </body>
+</html>

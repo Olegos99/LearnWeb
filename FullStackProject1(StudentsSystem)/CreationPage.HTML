@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+
+        <div id="backgroundImage">
+            <br><br>
+            <H1 class="placeinmid">Create New Car</H1>
+            <br><br>
+                <table  class="placeinmid">
+                    <tr>
+                        <td>Model:</td>
+                        <td><input type="text" id = "model" ></td>
+                    </tr>
+                    <tr>
+                        <td>Color:</td>
+                        <td><input type="text" id = "color" ></td>
+                    </tr>
+                    <tr>
+                        <td>Wheels:</td>
+                        <td><input type="text" id = "wheels" ></td>
+                    </tr>
+                    <tr>
+                        <td>Picture:</td>
+                        <td><input type="text" id = "img" ></td>
+                    </tr>
+                    <tr>
+                        <td>Year of Production:</td>
+                        <td><input type="text" id = "productionyear" ></td>
+                    </tr>
+                    <tr>
+                        <td>Cost:</td>
+                        <td><input type="text" id = "cost" ></td>
+                    </tr>
+
+                </table>
+                <br><br>
+                <button onclick="CreateNewCar()" class="glow-on-hover" type="button">Create</button>
+                <br><br>
+        </div>
+
+        <script>
+            const MyCarsURL = "http://localhost:8000/api/cars";
+
+            const model = document.getElementById("model");
+            const color = document.getElementById("color");
+            const wheels = document.getElementById("wheels");
+            const img = document.getElementById("img");
+            const productionyear = document.getElementById("productionyear");
+            const cost = document.getElementById("cost");
+
+            async function CreateNewCar()
+            {
+                console.log(model.value + " - model.value");
+                console.log(color.value + " - color.value");
+                if(model.value != undefined && model.value !="" && color.value != undefined && color.value != "")
+                {
+                    //request for adding new film (posting)
+                    var NewCar ={
+                        model : model.value,
+                        color : color.value,
+                        wheels : wheels.value,
+                        img : img.value,
+                        productionyear : productionyear.value,
+                        cost : cost.value
+                    };
+
+                    console.log(`Fetching with : ${MyCarsURL} to make 'POST' request with ${JSON.stringify(NewCar)} in a body`);
+
+                    sessionStorage.setItem("Last fetch request",`Fetching with : ${MyCarsURL} to make 'POST' request with ${JSON.stringify(NewCar)} in a body`);
+
+                        try {
+                        const PostRequest = await fetch(`${MyCarsURL}`, {
+                            method : "post", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                            headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
+                            body: JSON.stringify(NewCar) //convert user to json and send in rquest body
+                        });
+
+                        if(PostRequest.ok)
+                        {
+                            console.log(PostRequest);
+                        }
+                        else
+                        console.log("Error in POSTING"); 
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                    window.location.href = '\MainPage.HTML';
+                }
+                else{
+                    alert("To Create new Car you must fill 'Model' and 'Color' fields!")
+                }
+
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body onload="setCurrentStudentData()">
+        <div id="backgroundImage">
+                <br><br>
+            <H1 id = "Greeting text" class="placeinmid"></H1>
+            <H2 id = "UpdatingStudentsGrades" class="placeinmid"></H2>
+            <br><br>
+            <table  class="placeinmid" id = "grades">
+                <!-- <tr>
+                    <td>Date:</td>
+                    <td><input type="date" id = "date" required></td>
+                </tr>
+                <tr>
+                    <td>Grade:</td>
+                    <td><input type="number" min = 0 max = 100 id = "grade" required></td>
+                </tr> -->
+            </table>
+            <br><br>
+
+            <button onclick="SubmittChanges()" class="placeinmid SubmitUpdateButton">Save Changes</button>
+            <br><br>
+        </div>
+
+        <script>
+           const MyStudentsURL = "http://localhost:8000/api/students";
+
+           const StudentsName = document.getElementById("UpdatingStudentsGrades");
+            const GradesTable = document.getElementById("grades");
+            // const Date = document.getElementById("date");
+            // const Grade = document.getElementById("grade");
+
+            let CurrentlyUpdatingStudent;
+
+            //functionTofill all students grades (make relevant fields and fill them with data)
+            // async function FillTheTable()
+            // {
+            //     const Students = await fetch(MyStudentsURL);
+
+            //     if(Students.ok)
+            //     {
+            //         const ItemsData = await Students.json();
+            //         console.log(ItemsData);
+
+            //         CurrentNumberOfFilmsIs = ItemsData.length;
+            //         if(Number(FromItemId) > ItemsData.length - 1) // in case of deleting item and reloading page if it was last object on page return to preveous page
+            //         {
+            //             console.log("happend");
+            //             FromItemId -= Number(NumOfItemsToShow);
+            //             TillItemId -= Number(NumOfItemsToShow);
+            //             sessionStorage.setItem("FromItemId", Number(FromItemId));
+            //             sessionStorage.setItem("TillItemId", Number(TillItemId) );
+            //         }
+
+            //         for(let i = FromItemId; i < (TillItemId > ItemsData.length ? ItemsData.length : TillItemId) ; i ++)
+            //         {
+            //             //CreateItemTR(ItemsData[i].name, ItemsData[i].img, ItemsData[i]._id);
+            //             CreateItemTR(ItemsData[i].grade.gra,);
+            //         }
+            //         if(ItemsData.length <= NumOfItemsToShow)
+            //         {
+            //             NextPrevNav1.className += "hidden";
+            //             NextPrevNav2.className += "hidden";
+            //         }
+            //         else{
+            //             NextPrevNav2.className -= "hidden";
+            //             NextPrevNav2.className -= "hidden";
+            //         }
+            //     }
+            //     else
+            //     console.log("An Error oqured");
+            //     if(FromItemId == 0)
+            //     {
+            //         PrevButton.disabled = true;
+            //         PrevButton2.disabled = true;
+            //     }
+            //     if(TillItemId >= CurrentNumberOfFilmsIs)
+            //     {
+            //         NextButton.disabled = true;
+            //         NextButton2.disabled = true;
+            //     }
+            // }
+
+            function CreateItemTR(GradeDate, Grade)
+            {
+                var NewTR = document.createElement("tr");
+
+                NewTR.className = "ItemTR";
+
+                NewTR.innerHTML=`
+                <td class="Date"><input type = "Date" value = "${GradeDate}"></td>
+                <td class="Grade"><input type = "number" value = "${Grade}" min = 0 max = 100></td>
+                `;
+                GradesTable.append(NewTR);
+            }
+
+            async function setCurrentStudentData()
+            {
+                document.getElementById("Greeting text").innerHTML = `Edition of "${sessionStorage.getItem("Edit item with name")}" car`;
+
+                const Student = await fetch(`${MyStudentsURL}/${sessionStorage.getItem("Edit item with id")}`);
+
+                if(Student.ok)
+                {
+                    const StudentsData = await Student.json();
+                    //CurrentUpdatingFilm = FilmsData[sessionStorage.getItem("Edit film with id")];
+                    CurrentlyUpdatingStudent = StudentsData;
+
+                    for(let i = FromItemId; i < (TillItemId > ItemsData.length ? ItemsData.length : TillItemId) ; i ++)
+                    {
+                        CreateItemTR(CurrentlyUpdatingStudent.Grades[i].dateOfExam,CurrentlyUpdatingStudent.Grades[i].grade);
+                    }
+                    console.log(StudentsData);
+                }
+                else
+                console.log("An Error oqured");
+            }
+
+
+            async function SubmittChanges()
+            {
+
+                if(model.value != undefined && model.value !="" && color.value != undefined && color.value != "")
+                {
+                    console.log(model.value + " - model.value");
+                    console.log(color.value + " - color.value");
+
+                    var EditedCar = {
+                    model : model.value,
+                    color : color.value,
+                    wheels : wheels.value,
+                    img : img.value,
+                    productionyear : productionyear.value,
+                    cost : cost.value
+                    }
+
+                    console.log(`Fetching with : ${MyStudentsURL}/${sessionStorage.getItem("Edit item with id")} to make 'PUT' request with ${JSON.stringify(EditedCar)} in a body`);
+
+                    sessionStorage.setItem("Last fetch request",`Fetching with : ${MyStudentsURL}/${sessionStorage.getItem("Edit item with id")} to make 'PUT' request with ${JSON.stringify(EditedCar)} in a body`);
+
+                    try {
+                            const UpdateRequest = await fetch(`${MyStudentsURL}/${sessionStorage.getItem("Edit item with id")}`, {
+                            method : "put", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
+                            headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
+                            body: JSON.stringify(EditedCar) //convert user to json and send in rquest body
+                        });
+
+                        if(UpdateRequest.ok)
+                        {
+                            console.log(UpdateRequest);
+                        }
+                        else
+                        console.log("Error in updating");
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                    window.location.href = '\MainPage.HTML';
+                }
+                else
+                {
+                    alert("Car should have Model and Color fields filled!")
+                }
+
+            }
+        </script>
+    </body>
+</html>
