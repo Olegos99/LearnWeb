@@ -4,82 +4,72 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="style.css" rel="stylesheet">
     </head>
-    <body onload="setCurrentFilmData()">
+    <body onload="setCurrentStudentData()">
         <div id="backgroundImage">
                 <br><br>
             <H1 id = "Greeting text" class="placeinmid"></H1>
             <br><br>
             <table  class="placeinmid">
-                <tr>
-                    <td>Model:</td>
-                    <td><input type="text" id = "model" required></td>
-                </tr>
-                <tr>
-                    <td>Color:</td>
-                    <td><input type="text" id = "color" required></td>
-                </tr>
-                <tr>
-                    <td>Wheels:</td>
-                    <td><input type="text" id = "wheels" ></td>
-                </tr>
-                <tr>
-                    <td>Picture:</td>
-                    <td><input type="text" id = "img" ></td>
-                </tr>
-                <tr>
-                    <td>Year of Production:</td>
-                    <td><input type="text" id = "productionyear" ></td>
-                </tr>
-                <tr>
-                    <td>Cost:</td>
-                    <td><input type="text" id = "cost" ></td>
-                </tr>
+                <td>ID:</td>
+                <td><input type="text" id = "ID" required></td>
+            </tr>
+            <tr>
+                <td>Full Name:</td>
+                <td><input type="text" id = "FullName" required></td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td><input type="text" id = "email" ></td>
+            </tr>
+            <tr>
+                <td>Faculty:</td>
+                <td><input type="text" id = "Faculty" ></td>
+            </tr>
+            <tr>
+                <td>Date of birth:</td>
+                <td><input type="date" id = "YearofBirth" ></td>
+            </tr>
 
 
             </table>
             <br><br>
-            <!-- Name: <input type="text" id = "name"><br>
-            Rating: <input type="text" id = "Rating"><br>
-            Type: <input type="text" id = "Type"><br>
-            Runtime: <input type="text" id = "runtime"><br>
-            Language: <input type="text" id = "Language"><br>
-            Genres: <span id = "genres"></span><br><br> -->
 
             <button onclick="SubmittChanges()" class="placeinmid SubmitUpdateButton">Save Changes</button>
             <br><br>
         </div>
 
         <script>
-           const MyCarsURL = "http://localhost:8000/api/cars";
+           const MyStudentsURL = "http://localhost:8000/api/students";
 
-            const model = document.getElementById("model");
-            const color = document.getElementById("color");
-            const wheels = document.getElementById("wheels");
-            const img = document.getElementById("img");
-            const productionyear = document.getElementById("productionyear");
-            const cost = document.getElementById("cost");
+            const ID = document.getElementById("ID");
+            const FullName = document.getElementById("FullName");
+            const email = document.getElementById("email");
+            const Faculty = document.getElementById("Faculty");
+            const YearofBirth = document.getElementById("YearofBirth");
 
-            let CurrentUpdatingCar;
+            let CurrentUpdatingStudent;
 
-            async function setCurrentFilmData()
+            async function setCurrentStudentData()
             {
-                document.getElementById("Greeting text").innerHTML = `Edition of "${sessionStorage.getItem("Edit item with name")}" car`;
+                // document.getElementById("Greeting text").innerHTML = `Edition of ${sessionStorage.getItem("Edit item with name")}'s information`;
 
-                const film = await fetch(`${MyCarsURL}/${sessionStorage.getItem("Edit item with id")}`);
+                const Student = await fetch(`${MyStudentsURL
+                }/${sessionStorage.getItem("Edit item with id")}`);
 
-                if(film.ok)
+                if(Student.ok)
                 {
-                    const CarsData = await film.json();
+                    const StudentData = await Student.json();
                     //CurrentUpdatingFilm = FilmsData[sessionStorage.getItem("Edit film with id")];
-                    CurrentUpdatingCar = CarsData;
+                    CurrentUpdatingStudent = StudentData;
 
-                    model.value = CurrentUpdatingCar.model;
-                    color.value = CurrentUpdatingCar.color;
-                    wheels.value = CurrentUpdatingCar.wheels;
-                    img.value = CurrentUpdatingCar.img;
-                    productionyear.value = CurrentUpdatingCar.productionyear;
-                    cost.value = CurrentUpdatingCar.cost;
-                    console.log(CarsData);
+                    document.getElementById("Greeting text").innerHTML = `Edition of ${CurrentUpdatingStudent.FullName}'s information`;
+
+                    ID.value = CurrentUpdatingStudent.ID;
+                    FullName.value = CurrentUpdatingStudent.FullName;
+                    email.value = CurrentUpdatingStudent.email;
+                    Faculty.value = CurrentUpdatingStudent.Faculty;
+                    YearofBirth.value = CurrentUpdatingStudent.BirthDate.substring(0,10);;
+                    console.log(StudentData);
                 }
                 else
                 console.log("An Error oqured");
@@ -89,29 +79,28 @@
             async function SubmittChanges()
             {
 
-                if(model.value != undefined && model.value !="" && color.value != undefined && color.value != "")
+                if(ID.value != undefined && ID.value !="" && FullName.value != undefined && FullName.value != "",
+                email.value != undefined && email.value != "",
+                Faculty.value != undefined && Faculty.value != ""
+                )
                 {
-                    console.log(model.value + " - model.value");
-                    console.log(color.value + " - color.value");
-
-                    var EditedCar = {
-                    model : model.value,
-                    color : color.value,
-                    wheels : wheels.value,
-                    img : img.value,
-                    productionyear : productionyear.value,
-                    cost : cost.value
+                    var EditedStudent = {
+                    ID : ID.value,
+                    FullName : FullName.value,
+                    email : email.value,
+                    Faculty : Faculty.value,
+                    BirthDate : YearofBirth.value,
                     }
 
-                    console.log(`Fetching with : ${MyCarsURL}/${sessionStorage.getItem("Edit item with id")} to make 'PUT' request with ${JSON.stringify(EditedCar)} in a body`);
+                    console.log(`Fetching with : ${MyStudentsURL}/${sessionStorage.getItem("Edit item with id")} to make 'PUT' request with ${JSON.stringify(EditedStudent)} in a body`);
 
-                    sessionStorage.setItem("Last fetch request",`Fetching with : ${MyCarsURL}/${sessionStorage.getItem("Edit item with id")} to make 'PUT' request with ${JSON.stringify(EditedCar)} in a body`);
+                    sessionStorage.setItem("Last fetch request",`Fetching with : ${MyStudentsURL}/${sessionStorage.getItem("Edit item with id")} to make 'PUT' request with ${JSON.stringify(EditedStudent)} in a body`);
 
                     try {
-                            const UpdateRequest = await fetch(`${MyCarsURL}/${sessionStorage.getItem("Edit item with id")}`, {
+                            const UpdateRequest = await fetch(`${MyStudentsURL}/${sessionStorage.getItem("Edit item with id")}`, {
                             method : "put", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
                             headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
-                            body: JSON.stringify(EditedCar) //convert user to json and send in rquest body
+                            body: JSON.stringify(EditedStudent) //convert user to json and send in rquest body
                         });
 
                         if(UpdateRequest.ok)
@@ -128,7 +117,7 @@
                 }
                 else
                 {
-                    alert("Car should have Model and Color fields filled!")
+                    alert("You deleted important student data! Fill it to continue")
                 }
 
             }

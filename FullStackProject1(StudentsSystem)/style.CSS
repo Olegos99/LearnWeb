@@ -1,9 +1,5 @@
   body{
-    background:     linear-gradient(
-        rgb(0, 0, 0), 
-        rgb(0, 0, 0)
-      ), url(https://images.squarespace-cdn.com/content/v1/5a01bfa1bce17651a5f3334d/1581019119984-4FZOHCX1ITR7ADG7ILH9/image-asset.gif) no-repeat center center fixed; 
-    background-blend-mode: saturation;
+    background:    url(https://thumbs.gfycat.com/BogusUnrulyAfricanbushviper-size_restricted.gif) no-repeat center center fixed; 
       -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -13,18 +9,18 @@
 
 h1
 {
-    color: greenyellow;
+    color: white;
 }
 
 td
 {
-    color: greenyellow;
+    color: white;
 }
 #backgroundImage
 {
     text-align: center;
     justify-content: center;
-    /* background-color: black; */
+
 
     margin-left: 15%;
     margin-right: 15%;
@@ -36,8 +32,10 @@ td
     /* position: absolute;
     transform: translate(0%, 0%); */
 
-    -webkit-backdrop-filter: blur(10px)grayscale(1) brightness(0.3);
-    backdrop-filter: blur(10px)grayscale(1) brightness(0.3);
+    -webkit-backdrop-filter: blur(10px) brightness(0.5);
+    backdrop-filter: blur(10px) brightness(0.5);
+    /* background-color: blue;
+    opacity: 50%; */
 }
 
 #prev{
@@ -131,7 +129,8 @@ img{
 
 .updateButton
 {
-    background-color: rgb(37, 138, 28);
+    color: white;
+    background-color: rgb(33, 48, 182);
     width: 75px;
     border-radius: 5px;
 }
@@ -151,7 +150,7 @@ img{
 }
 .updateButton:hover
 {
-    background-color: rgb(14, 219, 14);
+    background-color: rgb(33, 53, 240);
 }
 .name
 {

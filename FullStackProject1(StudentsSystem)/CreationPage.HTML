@@ -8,75 +8,68 @@
 
         <div id="backgroundImage">
             <br><br>
-            <H1 class="placeinmid">Create New Car</H1>
+            <H1 class="placeinmid">Add new Student</H1>
             <br><br>
                 <table  class="placeinmid">
-                    <tr>
-                        <td>Model:</td>
-                        <td><input type="text" id = "model" ></td>
-                    </tr>
-                    <tr>
-                        <td>Color:</td>
-                        <td><input type="text" id = "color" ></td>
-                    </tr>
-                    <tr>
-                        <td>Wheels:</td>
-                        <td><input type="text" id = "wheels" ></td>
-                    </tr>
-                    <tr>
-                        <td>Picture:</td>
-                        <td><input type="text" id = "img" ></td>
-                    </tr>
-                    <tr>
-                        <td>Year of Production:</td>
-                        <td><input type="text" id = "productionyear" ></td>
-                    </tr>
-                    <tr>
-                        <td>Cost:</td>
-                        <td><input type="text" id = "cost" ></td>
-                    </tr>
+                    <td>ID:</td>
+                    <td><input type="text" id = "ID" required></td>
+                </tr>
+                <tr>
+                    <td>Full Name:</td>
+                    <td><input type="text" id = "FullName" required></td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td><input type="text" id = "email" ></td>
+                </tr>
+                <tr>
+                    <td>Faculty:</td>
+                    <td><input type="text" id = "Faculty" ></td>
+                </tr>
+                <tr>
+                    <td>Date of birth:</td>
+                    <td><input type="date" id = "YearofBirth" ></td>
+                </tr>
 
                 </table>
                 <br><br>
-                <button onclick="CreateNewCar()" class="glow-on-hover" type="button">Create</button>
+                <button onclick="CreateNewStudent()" class="glow-on-hover" type="button">Create</button>
                 <br><br>
         </div>
 
         <script>
-            const MyCarsURL = "http://localhost:8000/api/cars";
+           const MyStudentsURL = "http://localhost:8000/api/students";
 
-            const model = document.getElementById("model");
-            const color = document.getElementById("color");
-            const wheels = document.getElementById("wheels");
-            const img = document.getElementById("img");
-            const productionyear = document.getElementById("productionyear");
-            const cost = document.getElementById("cost");
+            const ID = document.getElementById("ID");
+            const FullName = document.getElementById("FullName");
+            const email = document.getElementById("email");
+            const Faculty = document.getElementById("Faculty");
+            const YearofBirth = document.getElementById("YearofBirth");
 
-            async function CreateNewCar()
+            async function CreateNewStudent()
             {
-                console.log(model.value + " - model.value");
-                console.log(color.value + " - color.value");
-                if(model.value != undefined && model.value !="" && color.value != undefined && color.value != "")
+                if(ID.value != undefined && ID.value !="" && FullName.value != undefined && FullName.value != "",
+                email.value != undefined && email.value != "",
+                Faculty.value != undefined && Faculty.value != ""
+                )
                 {
-                    //request for adding new film (posting)
-                    var NewCar ={
-                        model : model.value,
-                        color : color.value,
-                        wheels : wheels.value,
-                        img : img.value,
-                        productionyear : productionyear.value,
-                        cost : cost.value
-                    };
+                    var EditedStudent = {
+                    ID : ID.value,
+                    FullName : FullName.value,
+                    email : email.value,
+                    Faculty : Faculty.value,
+                    BirthDate : YearofBirth.value,
+                    }
 
-                    console.log(`Fetching with : ${MyCarsURL} to make 'POST' request with ${JSON.stringify(NewCar)} in a body`);
+                    console.log(`Fetching with : ${MyStudentsURL} to make 'POST' request with ${JSON.stringify(EditedStudent)} in a body`);
 
-                    sessionStorage.setItem("Last fetch request",`Fetching with : ${MyCarsURL} to make 'POST' request with ${JSON.stringify(NewCar)} in a body`);
+                    sessionStorage.setItem("Last fetch request",`Fetching with : ${MyStudentsURL} to make 'POST' request with ${JSON.stringify(EditedStudent)} in a body`);
 
                         try {
-                        const PostRequest = await fetch(`${MyCarsURL}`, {
+                        const PostRequest = await fetch(`${MyStudentsURL}`, {
                             method : "post", //  (create ("post")  /  update("put")  /  delete ("delete")  / get - default?)
                             headers : { "Content-Type": "application/json" }, //specify to webServise what we are sending (type of data)
-                            body: JSON.stringify(NewCar) //convert user to json and send in rquest body
+                            body: JSON.stringify(EditedStudent) //convert user to json and send in rquest body
                         });
 
                         if(PostRequest.ok)
@@ -92,7 +85,7 @@
                     window.location.href = '\MainPage.HTML';
                 }
                 else{
-                    alert("To Create new Car you must fill 'Model' and 'Color' fields!")
+                    alert("To Add new Student you must fill all fields!")
                 }
 
             }

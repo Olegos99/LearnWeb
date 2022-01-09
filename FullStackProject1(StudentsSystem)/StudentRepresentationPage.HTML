@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body onload="setCurrentStudentData()">
+        <div id="backgroundImage">
+                <br><br>
+            <H1 id = "Greeting text" class="placeinmid"></H1>
+            <br><br>
+            <table  class="placeinmid">
+                <tr>
+                    <td>ID:</td>
+                    <!-- <td><input type="text" id = "ID" required></td> -->
+                    <td><span id = "ID"></span></td>
+                </tr>
+                <tr>
+                    <td>Full Name:</td>
+                    <!-- <td><input type="text" id = "FullName" required></td> -->
+                    <td><span id = "FullName"></span></td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <!-- <td><input type="text" id = "email" ></td> -->
+                    <td><span id = "email"></span></td>
+                </tr>
+                <tr>
+                    <td>Faculty:</td>
+                    <!-- <td><input type="text" id = "img" ></td> -->
+                    <td><span id = "Faculty"></span></td>
+                </tr>
+                <tr>
+                    <td>Date of birth:</td>
+                    <td><span id = "YearofBirth"></span></td>
+                    <!-- <td><input type="text" id = "YearofBirth" ></td> -->
+                </tr>
+
+
+
+            </table>
+            <br><br>
+
+            <button onclick="GoToMainPage()" class="placeinmid">Go back</button>
+            <br><br>
+        </div>
+
+        <script>
+           const MyStudentsURL = "http://localhost:8000/api/students";
+
+            const ID = document.getElementById("ID");
+            const FullName = document.getElementById("FullName");
+            const email = document.getElementById("email");
+            const Faculty = document.getElementById("Faculty");
+            const YearofBirth = document.getElementById("YearofBirth");
+
+            let CurrentUpdatingStudent;
+
+            async function setCurrentStudentData()
+            {
+                // document.getElementById("Greeting text").innerHTML = `Presentation of "${sessionStorage.getItem("Present item with name")}" information`;
+
+                const Student = await fetch(`${MyStudentsURL}/${sessionStorage.getItem("Present item with id")}`);
+
+                if(Student.ok)
+                {
+                    const StudentsData = await Student.json();
+                    //CurrentUpdatingFilm = FilmsData[sessionStorage.getItem("Edit film with id")];
+                    CurrentUpdatingStudent = StudentsData;
+
+                    document.getElementById("Greeting text").innerHTML = `Presentation of "${CurrentUpdatingStudent.FullName}" information`;
+
+                    ID.innerHTML = CurrentUpdatingStudent.ID;
+                    FullName.innerHTML = CurrentUpdatingStudent.FullName;
+                    email.innerHTML = CurrentUpdatingStudent.email;
+                    Faculty.innerHTML = CurrentUpdatingStudent.Faculty;
+                    YearofBirth.innerHTML = CurrentUpdatingStudent.BirthDate.substring(0,10);
+                    console.log(StudentsData);
+                }
+                else
+                console.log("An Error oqured");
+            }
+
+
+            async function GoToMainPage()
+            {
+                window.location.href = '\MainPage.HTML';
+            }
+        </script>
+    </body>
+</html>

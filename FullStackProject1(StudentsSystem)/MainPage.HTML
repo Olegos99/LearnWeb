@@ -12,12 +12,12 @@
             <br>
             <span id = "greetingMesage"></span>
             <br><br>
-            <button onclick="CreateNew()" class="glow-on-hover" type="button">Create New Car</button>
+            <button onclick="CreateNew()" class="glow-on-hover" type="button">Add New Student</button>
             <br><br>
             <nav id = "NextPrevNAV1" class=""><button onclick="RefillTheTable(false)" id ="prev">Previous 10</button><button onclick="RefillTheTable(true)"  id ="next">Next 10</button></nav>
             <br><br>
             <table id="MainTable">
-                <tr><th>Full Name</th><th>Faculty</th><th>Grades</th><th>Edit</th><th>Delete</th></tr>
+                <tr><th>Full Name</th><th>Faculty</th><th></th><th></th><th></th></tr>
             </table>
             <br><br>
             <nav id = "NextPrevNAV2" class=""><button onclick="RefillTheTable(false)" id ="prev2">Previous 10</button><button onclick="RefillTheTable(true)"  id ="next2">Next 10</button></nav>
@@ -33,6 +33,7 @@
             const MyItemsURL = "http://localhost:8000/api/students";
 
             const UpdatingPagePath = '\StudentEditionPage.HTML';
+            const StudentRepresentationPage = '\StudentRepresentationPage.HTML';
             const GradesPagePath = '\GradesEditionPage.HTML';
             const ThisPage = '\MainPage.HTML';
             const ItemCreationPath = '\CreationPage.HTML';
@@ -159,18 +160,29 @@
                 NewTR.className = "ItemTR";
 
                 NewTR.innerHTML=`
-                <td class="child name">${FullName}</td>
-                <td class "child"> ${faculty}</td>
-                <td class="child"><button id="${id}" onclick="Update(id)" class="OpenLinkToGrades">Grades</button></td>
+                <td class="child name" id="${id}" onclick="PresentStudentData(id)">${FullName}</td>
+                <td class="child"> ${faculty}</td>
+                <td class="child"><button id="${id}" onclick="UpdateStudentsGrades(id)" class="OpenLinkToGrades">Grades</button></td>
                 <td class="child"><button id="${id}" onclick="Update(id)" class="updateButton">Update</button></td>
                 <td class="child"><button id="${id}" onclick="Delete(id)" class="deleteButton">Delete</button></td>
                 `;
                 placeToAdd.append(NewTR);
             }
 
+            function PresentStudentData(id)
+            {
+                sessionStorage.setItem("Present item with id", id);
+                window.location.href = StudentRepresentationPage;
+            }
+
+            function UpdateStudentsGrades(id)
+            {
+                sessionStorage.setItem("Edit item with id", id);
+                window.location.href = GradesPagePath;
+            }
+
             function Update(id)
             {
-                console.log(`update - ${id}`);
                 var parent = document.getElementById(id);
                 var children = parent.querySelectorAll('.child');
                 sessionStorage.setItem("Edit item with id", id);
@@ -183,7 +195,7 @@
                 console.log(`delete - ${id}`);
                 var parent = document.getElementById(id);
                 var children = parent.querySelectorAll('.child');
-                if(confirm(`You want to delete permanetly "${children[0].innerHTML}" item?`))
+                if(confirm(`You want to delete permanetly "${children[0].innerHTML}" student with all data?`))
                     {
                     sessionStorage.setItem("DELITE item with id", id);
 
