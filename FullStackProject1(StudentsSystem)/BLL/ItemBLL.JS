@@ -80,15 +80,6 @@ const UpdateItemById = (id, item) =>
     });
 }
 
-//update grade by id
-const UpdateGradeById = (id, grade) =>
-{
-    return new Promise((resolve,reject) =>
-    {
-
-    });
-}
-
 //Delete Item by ID
 const DeleteItemByID = async (id) => {
     return new Promise((resolve, reject) => {
@@ -107,6 +98,5 @@ GetItemById,
 PostNewItem,
 UpdateItemById,
 DeleteItemByID,
-GetAllStudentGradesByID,
-UpdateGradeById
+GetAllStudentGradesByID
 }

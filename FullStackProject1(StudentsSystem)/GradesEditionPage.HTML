@@ -10,9 +10,10 @@
             <H1 id = "Greeting text" class="placeinmid"></H1>
             <H2 id = "UpdatingStudentsGrades" class="placeinmid"></H2>
             <br><br>
-            <table id = "MainTable">
-                <tr>
-                    <th>Grade</th><th>Date</th>
+            <table id = "MainTableGrades">
+                <tr>     
+                    <th style="padding-right: 70px;">Grade <img class="FilterButton" onclick="FilterGrade()" src="https://www.svgrepo.com/show/119597/up-and-down-arrows.svg"></th>
+                    <th style="padding-right: 100px;">Date </th>
                 </tr>
             </table>
             <br><br>
@@ -26,33 +27,115 @@
         <script>
            const MyStudentsURL = "http://localhost:8000/api/students";
 
-           const StudentsName = document.getElementById("UpdatingStudentsGrades");
-            const GradesTable = document.getElementById("MainTable");
+            const StudentsName = document.getElementById("UpdatingStudentsGrades");
+            const GradesTable = document.getElementById("MainTableGrades");
+
+            let GradesOrderedFromBigToSmall = false;
 
             let lastID = 0;
 
             let CurrentlyUpdatingStudent;
 
+            function FilterGrade()
+            {
+                let allGrades = document.getElementsByClassName("Grade");
+                let gradesArray = [];
+                for(var q = 0; q < allGrades.length; q++)
+                {
+                    gradesArray.push(Number(allGrades[q].value));
+                }
+                gradesArray = sortItems(gradesArray);
+                // console.log("Sorted grades: " + gradesArray);
+
+                var allGradesTRs = document.getElementsByClassName("ItemTR");
+                var UsedGrades = [];
+                for(var i = 0; i < allGradesTRs.length; i ++)
+                {
+                    // console.log("i" + i);
+                    //let firstChild = allGradesTRs[i].firstChild; 
+                    for(var q = 0; q < gradesArray.length; q ++)
+                    {
+                        // console.log("value: " + allGradesTRs[i].childNodes[1].firstChild.value);
+                        // console.log("UsedGrades.length " + UsedGrades.length);
+                        // console.log("gradesArray[q] " + gradesArray[q]);
+                        // console.log("UsedGrades.includes(gradesArray[q]) " + UsedGrades.includes(gradesArray[q]));
+                        // console.log("allGradesTRs[i].childNodes[1].firstChild.value === gradesArray[q]  " + (allGradesTRs[i].childNodes[1].firstChild.value === gradesArray[q]));
+                        if((allGradesTRs[i].childNodes[1].firstChild.value == gradesArray[q]))
+                        {
+                            if(UsedGrades.includes(gradesArray[q]))
+                            {
+                                let counts = 0;
+                                UsedGrades.forEach(function (x) { x == gradesArray[q] ? counts++ : counts = counts });
+                                allGradesTRs[i].id = q + counts;
+                                UsedGrades.push(gradesArray[q]);
+                                break;
+                            }
+                            allGradesTRs[i].id = q;
+                            UsedGrades.push(gradesArray[q]);
+                            break;
+                        }
+                    }
+                }
+                ReorderTheTable();
+            }
+
+            function FilterDate()
+            {
+                let allDates = document.getElementsByClassName("Date");
+            }
+
+            function sortItems(array) {
+                for (let i = 0; i < array.length; i++) {
+                    for (let j = 0; j < array.length; j++) {
+                        if (array[j] > array[j + 1]) {
+                            let temp = array[j];
+                            array[j] = array[j + 1];
+                            array[j + 1] = temp;
+                        }
+                    }
+                }
+                return array;
+            }
+
+            function ReorderTheTable()
+            {
+                const ordered = [...document.getElementsByClassName("ItemTR")]
+
+                if(GradesOrderedFromBigToSmall)
+                {
+                    ordered.forEach((elem, index)=>{
+                        elem.style.order = ordered.length - elem.id
+                    })   
+                }
+                else{
+                    ordered.forEach((elem, index)=>{
+                        elem.style.order = elem.id
+                    })  
+                }
+                GradesOrderedFromBigToSmall = !GradesOrderedFromBigToSmall;
+            }
+            
             function CreateItemTR(GradeDate, Grade)
             {
                 var NewTR = document.createElement("tr");
 
                 NewTR.className = "ItemTR";
                 NewTR.id = `${lastID}`;
+                NewTR.style.order = `${lastID}`;
 
                 if(GradeDate == 0 && Grade == 0)
                 {
                     NewTR.innerHTML=`
                 <td ><input type = "number" class="Grade" min = 0 max = 100></td>
                 <td ><input type = "date" class="Date"></td>
-                <td><button onclick="DeleteTR(${NewTR.id})">Delete</button></td>
+                <td><button onclick="DeleteTR(this)">Delete</button></td>
                 `;
                 }
                 else{
                     NewTR.innerHTML=`
                 <td ><input type = "number" class="Grade" value = "${Grade}" min = 0 max = 100></td>
                 <td ><input type = "date" class="Date" value = "${GradeDate.substring(0,10)}"></td>
-                <td><button onclick="DeleteTR(${NewTR.id})">Delete</button></td>
+                <td><button onclick="DeleteTR(this)">Delete</button></td>
                 `;
                 }
 
@@ -62,7 +145,10 @@
 
             function DeleteTR(TRid)
             {
-                var deleteThis = document.getElementById(TRid);
+                var parentDiv = TRid.parentNode.parentNode;
+                // console.log(parentDiv);
+                var id = parentDiv.getAttribute("id");
+                var deleteThis = document.getElementById(id);
                 deleteThis.remove();
             }
 
@@ -101,44 +187,38 @@
                 let allGrades = document.getElementsByClassName("Grade");
                 let allDates = document.getElementsByClassName("Date");
 
-                // console.log(allGrades[2].value);
-                // console.log(allDates[2].value);
-
                 var counter = 0;
                 for(var q = 0; q < allGrades.length; q++)
                 {
-                    console.log(allGrades[q].value);
+                    // console.log(allGrades[q].value);
                     if(allGrades[q].value == "" || allGrades[q].value > 100 || allGrades[q].value < 0)
                     {
                         counter ++;
                     }
                 }
-                // allGrades.forEach(element => {
-                //     if(element.value == "" || element.value > 100 || element.value < 0)
-                //     {
-                //         counter ++;
-                //     }
-                // });
+
                 if(counter == 0)
                     allGradesFilledOK = true;
                 counter = 0;
 
                 var today = new Date();
-                var CurrentDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                var CurrentDate = today.getFullYear()+'-'+('0' + (today.getMonth()+1)).slice(-2)+'-'+today.getDate();
                 for(var q = 0; q < allDates.length; q++)
                 {                    
-                    if(allDates[q].value == "" || allDates[q].value > CurrentDate)
+                    if(allDates[q].value == "" || Number(allDates[q].value.substring(0,4)) > Number(CurrentDate.substring(0,4)) || 
+                    Number(allDates[q].value.substring(0,4)) == Number(CurrentDate.substring(0,4)) && Number(allDates[q].value.substring(5,7)) > Number(CurrentDate.substring(5,7)) ||
+                    Number(allDates[q].value.substring(0,4)) == Number(CurrentDate.substring(0,4)) && Number(allDates[q].value.substring(5,7)) == Number(CurrentDate.substring(5,7)) && Number(allDates[q].value.substring(8,10)) > Number(CurrentDate.substring(8,10)))
                     {
+                        // console.log("allDates[q].value= " + allDates[q].value);
+                        // console.log("CurrentDate = " + CurrentDate);
+                        // console.log( Number(allDates[q].value.substring(0,4)) + " grade year          current date year " +Number(CurrentDate.substring(0,4)));
+                        // console.log( Number(allDates[q].value.substring(5,7)) + " grade month          current date month " +Number(CurrentDate.substring(5,7)));
+                        // console.log( Number(allDates[q].value.substring(8,10)) + " grade day          current date day " +Number(CurrentDate.substring(8,10)));
                         counter ++;
                     }
 
                 }
-                // allDates.forEach(element => {
-                //     if(element.value == "" || element.value > CurrentDate)
-                //     {
-                //         counter ++;
-                //     }
-                // });
+
                 if(counter == 0)
                     allDatesFilledOK = true;
 
@@ -156,7 +236,7 @@
                         }
                         Allgrades.push(grade);
                     }
-                    console.log("Allgrades: " + Allgrades);
+                    // console.log("Allgrades: " + Allgrades);
                     //forloop for all grades
                     EditedStudent.Grades = Allgrades;
                 
