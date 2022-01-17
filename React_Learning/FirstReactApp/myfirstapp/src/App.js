@@ -7,6 +7,8 @@ import Ex3 from './LessonComponents/Ex3.js';
 import Ex32 from './LessonComponents/Ex32.js';
 import Ex33 from './LessonComponents/Ex33.js';
 import Ex35 from './LessonComponents/Ex35ContainerforEx3.js';
+import ParentComp from './ParentChildConnection/ParentComp.js';
+import MainParentForContext from './ContextUse/MainParent.js';
 
 
 
@@ -20,15 +22,19 @@ class App extends Component {
         <PersonalData fullname = "Capitan morgan" adress = "Ship in caribian ocean"/>
         <StateComp></StateComp>
         <AditionComponent></AditionComponent> */}
-        <Ex3></Ex3>
+        {/* <Ex3></Ex3>
         <Ex32></Ex32>
-        <Ex35></Ex35>
+        <Ex35></Ex35> */}
         {/* <ul>
           <Ex33 Name ="Oleg" Age="22" City="Haifa"></Ex33>
           <Ex33 Name ="Ron" Age="20" City="Telaviv"></Ex33>
           <Ex33 Name ="Dov" Age="27" City="Ashdod"></Ex33>
           <Ex33 Name ="Vered" Age="45" City="Lod"></Ex33>
         </ul> */}
+
+        {/* <ParentComp></ParentComp> */}
+        <MainParentForContext></MainParentForContext>
+
       </div>
     );
   }
