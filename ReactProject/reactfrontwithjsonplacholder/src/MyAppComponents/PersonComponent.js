@@ -48,6 +48,10 @@ class PersonComponent extends Component
 
     componentDidUpdate()
     {
+        // if(this.state.showOtherData != this.props.showOtherData)
+        // {
+        //     this.setState({showOtherData:this.props.showOtherData});
+        // }
         if(this.state.borderColor != this.props.borderColor)
         {
             this.setState({borderColor:this.props.borderColor});
@@ -60,7 +64,7 @@ class PersonComponent extends Component
         {
             this.setState({id:this.props.id, name: this.props.name, email: this.props.email,
                 street:this.props.street, city:this.props.city,zipcode:this.props.zipcode, bordercolor: this.props.borderColor,
-                currentluSelected: this.props.currentluSelected});
+                currentluSelected: this.props.currentluSelected,showOtherData:false});
                 this.setState({timeout:  setTimeout(() => {
                     this.SetValuesOnLoad();
                 }, 200)})

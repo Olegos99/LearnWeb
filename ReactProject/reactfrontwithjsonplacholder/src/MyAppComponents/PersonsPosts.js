@@ -27,7 +27,7 @@ class PersonsPosts extends Component {
 
         return (
             <>
-              <table style ={{border: "solid ", borderWidth: "1px", borderColor: "black",   fontsize: "small", margin: "10px",marginLeft: "10%",marginRight: "10%"}}>
+              <table style ={{border: "solid ", borderWidth: "1px", borderColor: "black",   fontsize: "small",  margin: "2%",marginLeft: "2%",marginRight: "2%", width:"96%",}}>
                   <tbody>
                       <tr>
                           <td style ={{fontsize: "small"}}>

@@ -4,6 +4,8 @@ import {getUsersFullData} from "./Utils";
 import PersonComponent from "./PersonComponent";
 import PersonsPosts from "./PersonsPosts";
 import PersonsToDos from "./PersonsToDos";
+import AddNewToDoComponent from "./AddNewToDoComponent";
+import AddNewPostComponent from "./AddNewPostComponent";
 
 const UsersUrl = "https://jsonplaceholder.typicode.com/users";
 const PostsUrl = "https://jsonplaceholder.typicode.com/posts";
@@ -17,11 +19,21 @@ class PersonsContainer extends Component {
             usersToShow: [],
             currentlySearching: false,
             showfullData : false,
-            currentluPresentingUser:{}
+            showNewuserCreation : false,
+            showNewTodoCreation : false,
+            showNewPostCreation : false,
+            currentluPresentingUser:{},
+            currentuserwithOtherData:{}
         }
         this.myReftoSearchLine = React.createRef();
 
         this.SearchAlgorithm = this.SearchAlgorithm.bind(this);
+        this.AddNewTodo = this.AddNewTodo.bind(this);
+        this.HandleAddNewTodo = this.HandleAddNewTodo.bind(this);
+        this.HandleAddNewPost = this.HandleAddNewPost.bind(this);
+        
+        
+        
     }
 
     componentDidMount()
@@ -172,12 +184,15 @@ class PersonsContainer extends Component {
         }
         else
         {
+            if(this.state.showNewuserCreation || this.state.showNewTodoCreation|| this.state.showNewPostCreation)
+            {
+                this.setState({showNewuserCreation:false,showNewTodoCreation:false,showNewPostCreation:false});
+            }
             this.setState({showfullData:!this.state.showfullData});
             var FindUser = this.state.users.filter(usr => usr.id === userid);
             // console.log("filtering result: ");
             // console.log(FindUser.id);
             this.setState({currentluPresentingUser:FindUser[0]});
-            // this.setState({currentluPresentingUser:this.state.users[userid-1]});
         }
     }
 
@@ -214,6 +229,77 @@ class PersonsContainer extends Component {
         // }
     }
 
+    HandleAddNewPost()
+    {
+        this.setState({showfullData: false, showNewPostCreation:true });
+    }
+
+    HandleAddNewTodo()
+    {
+        this.setState({showfullData: false,showNewTodoCreation:true });
+    }
+
+    AddNewTodo = (newTodoName) =>
+    {
+        if(newTodoName!= null)
+        {
+            const index = this.state.users.findIndex((usr) => usr.id === this.state.currentluPresentingUser.id);
+            var NewUser = this.state.users[index];
+            NewUser = {
+                ...this.state.users[index]
+            } 
+    
+            var updatedtodos = [...NewUser.todos.data];
+    
+            var NewTodo =
+            {
+                completed: false,
+                id:NewUser.todos.data[NewUser.todos.data.length - 1].id +1,
+                title: newTodoName,
+                userId:this.state.currentluPresentingUser.id
+            }
+    
+            updatedtodos.push(NewTodo);
+            NewUser.todos.data = updatedtodos;
+    
+            const updatedUsers = [...this.state.users];
+            updatedUsers.splice(index, 1, NewUser); 
+            this.setState({users: updatedUsers});
+        }
+        this.setState({showfullData: true,showNewTodoCreation:false});
+    }
+
+
+    AddNewPost = (title, body) =>
+    {
+        if(title!= null && body!= null)
+        {
+            const index = this.state.users.findIndex((usr) => usr.id === this.state.currentluPresentingUser.id);
+            var NewUser = this.state.users[index];
+            NewUser = {
+                ...this.state.users[index]
+            } 
+    
+            var updatedposts = [...NewUser.posts.data];
+    
+            var Newpost =
+            {
+                id:NewUser.posts.data.length,
+                title: title,
+                body: body,
+                userId:this.state.currentluPresentingUser.id
+            }
+    
+            updatedposts.push(Newpost);
+            NewUser.posts.data = updatedposts;
+    
+            const updatedUsers = [...this.state.users];
+            updatedUsers.splice(index, 1, NewUser); 
+            this.setState({users: updatedUsers});
+        }
+        this.setState({showfullData: true,showNewPostCreation:false});
+    }
+
     render() {
         // Repeater
         const usersRep = this.state.usersToShow.map((user, index) => 
@@ -239,7 +325,7 @@ class PersonsContainer extends Component {
         {
             UsersPosts = CurrentUsersPosts.data.map((post, index) =>
                 <PersonsPosts key={index} title={post.title} body={post.body}></PersonsPosts>
-            )
+            ).reverse();
         }
         else{
             UsersPosts = <h2>OMG</h2>;
@@ -257,7 +343,7 @@ class PersonsContainer extends Component {
         {
             UsersTodos = CurrentUsersTodos.data.map((todo, index) =>
                 <PersonsToDos key={index} title={todo.title} completed={todo.completed} id= {todo.id} callback={this.CompleteTheTask}></PersonsToDos>
-            )
+            ).reverse();
         }
         else{
             UsersTodos = <h2>OMG</h2>;
@@ -266,7 +352,7 @@ class PersonsContainer extends Component {
         return (
             <>
                 <nav style ={{display:"flex"}}>
-                    <div style ={{border: "solid ", borderWidth: "1px", borderColor: "black", borderRadius:"50px",width:"50%"}}>  
+                    <div style ={{border: "solid ", borderWidth: "1px", borderColor: "black", height:"fit-content", borderRadius:"50px",width:"50%"}}>  
                             <nav>
                                 Search: 
                                 <input ref={this.myReftoSearchLine} type="text" onChange={this.SearchAlgorithm}></input>
@@ -275,15 +361,23 @@ class PersonsContainer extends Component {
                             {usersRep}
                     </div>
                     <div style ={{display:this.state.showfullData ? "block":"none", width:"45%", marginLeft:"10px"}}>
-                            <h2>Todos:</h2>
+                            <nav><h2>Todos:</h2> <button onClick={this.HandleAddNewTodo}>Add</button></nav>
                             <div style ={{border: "solid ", borderWidth: "1px", borderColor: "black", height:"fit-content", display: "block", width: "100%"}}>
                                 {UsersTodos}
                             </div>
-                            <h2>Posts:</h2>
+                            <h2>Posts:</h2> <button onClick={this.HandleAddNewPost}>Add</button>
                             <div style ={{border: "solid ", borderWidth: "1px", borderColor: "black", height:"fit-content", display: "block", width: "100%"}}>
                                 {UsersPosts}
                             </div>
                     </div>
+                        <div style ={{display:this.state.showNewuserCreation || this.state.showNewTodoCreation|| this.state.showNewPostCreation ? "block":"none", width:"45%", marginLeft:"10px"}}>
+                            <div style ={{display:this.state.showNewTodoCreation ? "block":"none"}}>
+                                <AddNewToDoComponent SaveCallback ={this.AddNewTodo}></AddNewToDoComponent>
+                            </div>
+                            <div style ={{display:this.state.showNewPostCreation ? "block":"none"}}>
+                                <AddNewPostComponent SaveCallback={this.AddNewPost}></AddNewPostComponent>
+                            </div>
+                        </div>
                 </nav>
             </>
         )
