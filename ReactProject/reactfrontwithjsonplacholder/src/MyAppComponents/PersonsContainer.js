@@ -6,6 +6,7 @@ import PersonsPosts from "./PersonsPosts";
 import PersonsToDos from "./PersonsToDos";
 import AddNewToDoComponent from "./AddNewToDoComponent";
 import AddNewPostComponent from "./AddNewPostComponent";
+import AddNewPersonComponent from "./AddNewPersonComponent";
 
 const UsersUrl = "https://jsonplaceholder.typicode.com/users";
 const PostsUrl = "https://jsonplaceholder.typicode.com/posts";
@@ -28,30 +29,14 @@ class PersonsContainer extends Component {
         this.myReftoSearchLine = React.createRef();
 
         this.SearchAlgorithm = this.SearchAlgorithm.bind(this);
-        this.AddNewTodo = this.AddNewTodo.bind(this);
         this.HandleAddNewTodo = this.HandleAddNewTodo.bind(this);
         this.HandleAddNewPost = this.HandleAddNewPost.bind(this);
-        
-        
-        
+        this.AddNewUserHandler = this.AddNewUserHandler.bind(this);
     }
 
     componentDidMount()
     {
         this.getAllUsers();
-    }
-
-    componentDidUpdate()
-    {
-        // console.log("this.state.users: "  );
-        // console.log(this.state.users);
-        // console.log(this.state.users.length);
-        // this.setState({usersReady:true});
-    }
-
-    AddNewUser()
-    {
-
     }
 
     getAllUsers = async () => {
@@ -80,14 +65,27 @@ class PersonsContainer extends Component {
         {
             this.setState({usersToShow: this.state.users});
             this.setState({currentlySearching: false});
+
+            if(this.state.showfullData && this.state.currentluPresentingUser != undefined)
+            {
+                this.setState({showfullData: true});  
+            }
         }
         else{
             this.setState({currentlySearching: true});
-            console.log("Searchline to lower = " + SearchLine.toLowerCase());
+            // console.log("Searchline to lower = " + SearchLine.toLowerCase());
             var newUseersArray = this.state.users.filter((element) => element.name.toLowerCase().includes(SearchLine.toLowerCase()) ||
             element.email.toLowerCase().includes(SearchLine.toLowerCase()));
             this.setState({usersToShow:newUseersArray});
+            if(!newUseersArray.includes(this.state.currentluPresentingUser))
+            {
+                this.setState({showfullData: false});
+            }
+            else{
+                this.setState({showfullData: true});
+            }
         }
+
     }
 
     DeleteUserWithId = (ID) =>
@@ -105,7 +103,15 @@ class PersonsContainer extends Component {
 
 
         this.setState({users:newArr});
-        this.setState({usersToShow:newarrtoshow});
+        if(this.state.currentlySearching)
+        {
+            this.setState({usersToShow:newarrtoshow});
+        }
+        else{
+            this.setState({usersToShow:newArr});
+        }
+
+
         // if(this.state.currentlySearching)
         // {
         //     setTimeout(() => {
@@ -136,7 +142,22 @@ class PersonsContainer extends Component {
         const updatedUsers = [...this.state.users];
         updatedUsers.splice(index, 1, NewUser); 
         this.setState({users: updatedUsers});
-        // this.setState({usersToShow:updatedUsers});
+
+
+
+        if(this.state.currentlySearching)
+        {
+            var newarrtoshow = [...this.state.usersToShow];
+            var ShowThis = newarrtoshow.map((elem, index) => updatedUsers.find(x => x.id === elem.id));
+            var ShowThisfiltered = ShowThis.filter(function(x) {
+                return x !== undefined;
+           });
+            this.setState({usersToShow:ShowThisfiltered});
+        }
+        else{
+            this.setState({usersToShow:updatedUsers});
+        }
+
         // if(this.state.currentlySearching)
         // {
         //     setTimeout(() => {
@@ -149,19 +170,25 @@ class PersonsContainer extends Component {
     {
         var AllTasksAreCompleted = true;
 
-        var UsersTodos = [...user.todos.data]
-
-        for(var i = 0; i < UsersTodos.length; i++)
+        if(user.todos.data)
         {
-            if(!UsersTodos[i].completed)
-            {
-                AllTasksAreCompleted = false;
-                break;
-            }
-        }
-        // console.log(`Desiding on border color for user with id: ${user.id} desigion is:  ${ AllTasksAreCompleted ? "green":"red"}`);
+            var UsersTodos = [...user.todos.data]
 
-        return AllTasksAreCompleted ? "green":"red";
+            for(var i = 0; i < UsersTodos.length; i++)
+            {
+                if(!UsersTodos[i].completed)
+                {
+                    AllTasksAreCompleted = false;
+                    break;
+                }
+            }
+            // console.log(`Desiding on border color for user with id: ${user.id} desigion is:  ${ AllTasksAreCompleted ? "green":"red"}`);
+    
+            return AllTasksAreCompleted ? "green":"red";
+        }
+        else{
+            return "green";
+        }
     }
 
     ShowFullDataTogle = (userid) =>
@@ -239,6 +266,12 @@ class PersonsContainer extends Component {
         this.setState({showfullData: false,showNewTodoCreation:true });
     }
 
+    
+    AddNewUserHandler()
+    {
+        this.setState({showfullData: false,showNewuserCreation:true });
+    }
+
     AddNewTodo = (newTodoName) =>
     {
         if(newTodoName!= null)
@@ -250,11 +283,13 @@ class PersonsContainer extends Component {
             } 
     
             var updatedtodos = [...NewUser.todos.data];
+
+            var NewTodoId = NewUser.todos.data.length > 0 ? NewUser.todos.data[NewUser.todos.data.length - 1].id +1 : 1;
     
             var NewTodo =
             {
                 completed: false,
-                id:NewUser.todos.data[NewUser.todos.data.length - 1].id +1,
+                id:NewTodoId,
                 title: newTodoName,
                 userId:this.state.currentluPresentingUser.id
             }
@@ -300,6 +335,56 @@ class PersonsContainer extends Component {
         this.setState({showfullData: true,showNewPostCreation:false});
     }
 
+
+    AddNewPerson = (Name, Email) =>
+    {
+        if(Name!= null && Email!= null)
+        {
+            var NewUser =
+            {
+                id: this.state.users[this.state.users.length - 1].id + 1,
+                name: Name,
+                email: Email,
+                street: "",
+                city: "",
+                zipcode:"",
+                posts:{
+                    data:[]
+                },
+                todos:{
+                    data:[]
+                }
+            }
+                const updatedUsers = [...this.state.users];
+                updatedUsers.push(NewUser); 
+                this.setState({users: updatedUsers});
+
+                if(this.state.currentlySearching)
+                {
+                    var newarrtoshow = [...this.state.usersToShow];
+                    var ShowThis = newarrtoshow.map((elem, index) => updatedUsers.find(x => x.id === elem.id));
+                    var ShowThisfiltered = ShowThis.filter(function(x) {
+                        return x !== undefined;
+                    });
+
+                    var SearchLineNode = this.myReftoSearchLine.current;
+                    var SearchLine = SearchLineNode.value;
+
+                    if(NewUser.name.includes(SearchLine) || NewUser.email.includes(SearchLine))
+                    {
+                        ShowThisfiltered.push(NewUser);
+                    }
+                   
+                    this.setState({usersToShow:ShowThisfiltered});
+                }
+                else{
+                    this.setState({usersToShow:updatedUsers});
+                }
+                // this.setState({usersToShow: updatedUsers});
+        }
+        this.setState({showfullData: false,showNewuserCreation:false});
+    }
+
     render() {
         // Repeater
         const usersRep = this.state.usersToShow.map((user, index) => 
@@ -321,14 +406,14 @@ class PersonsContainer extends Component {
         // }
 
         let UsersPosts = [{...CurrentUsersPosts}];
-        if(CurrentUsersPosts !== undefined)
+        if(CurrentUsersPosts !== undefined && CurrentUsersPosts.data !== undefined)
         {
             UsersPosts = CurrentUsersPosts.data.map((post, index) =>
                 <PersonsPosts key={index} title={post.title} body={post.body}></PersonsPosts>
             ).reverse();
         }
         else{
-            UsersPosts = <h2>OMG</h2>;
+            UsersPosts = <h2>No posts</h2>;
         }
 
         const CurrentUsersTodos = this.state.currentluPresentingUser !== undefined ? this.state.currentluPresentingUser.todos : {};
@@ -346,7 +431,7 @@ class PersonsContainer extends Component {
             ).reverse();
         }
         else{
-            UsersTodos = <h2>OMG</h2>;
+            UsersTodos = <h2>No todos</h2>;
         }
 
         return (
@@ -356,7 +441,7 @@ class PersonsContainer extends Component {
                             <nav>
                                 Search: 
                                 <input ref={this.myReftoSearchLine} type="text" onChange={this.SearchAlgorithm}></input>
-                                <button onClick={this.AddNewUser}>Add</button>
+                                <button onClick={this.AddNewUserHandler}>Add</button>
                             </nav>
                             {usersRep}
                     </div>
@@ -377,6 +462,11 @@ class PersonsContainer extends Component {
                             <div style ={{display:this.state.showNewPostCreation ? "block":"none"}}>
                                 <AddNewPostComponent SaveCallback={this.AddNewPost}></AddNewPostComponent>
                             </div>
+                            <div style ={{display:this.state.showNewuserCreation ? "block":"none"}}>
+                                <AddNewPersonComponent SaveCallback={this.AddNewPerson}></AddNewPersonComponent>
+                            </div>
+
+
                         </div>
                 </nav>
             </>

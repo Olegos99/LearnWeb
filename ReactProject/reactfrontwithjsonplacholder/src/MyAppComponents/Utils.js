@@ -32,8 +32,6 @@ const getUsersFullData = (urlUsers, urlTodos, urlPosts) => {
 
         console.log(AllUsers);
 
-        console.log("ffffffffffffffffffffffffff");
-
         var NewArrayOfUsers = [];
 
         await asyncForEach(AllUsers,async(element) => {
@@ -65,7 +63,7 @@ const getUsersFullData = (urlUsers, urlTodos, urlPosts) => {
 
         element = NewUser;
         NewArrayOfUsers.push(element);
-        console.log(NewArrayOfUsers.length + " array lenght")
+        // console.log(NewArrayOfUsers.length + " array lenght")
         console.log(element)
         });
 

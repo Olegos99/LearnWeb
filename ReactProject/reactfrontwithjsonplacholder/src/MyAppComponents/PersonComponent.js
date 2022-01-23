@@ -48,10 +48,6 @@ class PersonComponent extends Component
 
     componentDidUpdate()
     {
-        // if(this.state.showOtherData != this.props.showOtherData)
-        // {
-        //     this.setState({showOtherData:this.props.showOtherData});
-        // }
         if(this.state.borderColor != this.props.borderColor)
         {
             this.setState({borderColor:this.props.borderColor});
@@ -69,6 +65,16 @@ class PersonComponent extends Component
                     this.SetValuesOnLoad();
                 }, 200)})
         }
+        // if(this.props.name != this.state.name || this.props.email != this.state.email ||this.props.street != this.state.street ||
+        //     this.props.city != this.state.city ||this.props.zipcode != this.state.zipcode )
+        // {
+        //     this.setState({id:this.props.id, name: this.props.name, email: this.props.email,
+        //         street:this.props.street, city:this.props.city,zipcode:this.props.zipcode, bordercolor: this.props.borderColor,
+        //         currentluSelected: this.props.currentluSelected,showOtherData:false});
+        //         this.setState({timeout:  setTimeout(() => {
+        //             this.SetValuesOnLoad();
+        //         }, 200)})
+        // }
     }
 
     componentWillUnmount()
@@ -86,9 +92,9 @@ class PersonComponent extends Component
 
         NameNode.value = this.props.name;
         EmailNode.value = this.props.email;
-        ZipCodeNode.value = this.props.email;
+        ZipCodeNode.value = this.props.zipcode;
         CityNode.value = this.props.city;
-        StreetNode.value = this.props.zipcode;
+        StreetNode.value = this.props.street;
     }
 
     OnOtherDataClick()
